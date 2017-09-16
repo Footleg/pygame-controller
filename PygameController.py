@@ -53,6 +53,7 @@ class RobotController:
     AXES = (27,4)
     BTNS = (19,13)
     HATS = (0,1)
+    CONTROLLER_DISPLAY_NAMES = ("Sony PS3 Dualshock 6-axis Controller","Rock Candy Wireless Gamepad for PS3")
     
     #Define indices for each control for the different supported controllers
     leftTriggerIdx = (12,-1)
@@ -73,6 +74,7 @@ class RobotController:
     leftStickPressIdx = (1,10)
     rightStickPressIdx = (2,11)
     selectBtnIdx = (0,8)
+    homeBtnIdx = (16,12)
     startBtnIdx = (3,9)
     triangleBtnIdx = (12,3)
     squareBtnIdx = (15,0)
@@ -107,6 +109,7 @@ class RobotController:
     leftStickPressedState = 0
     rightStickPressedState = 0
     selectBtnState = 0
+    homeBtnState = 0
     startBtnState = 0
     triangleBtnState = 0
     squareBtnState = 0
@@ -119,7 +122,7 @@ class RobotController:
                  leftBtn2Changed = None, rightBtn2Changed = None,
                  hatChanged = None,
                  leftStickPressChanged = None, rightStickPressChanged = None,
-                 selectBtnChanged = None, startBtnChanged = None, triangleBtnChanged = None,
+                 selectBtnChanged = None, homeBtnChanged = None, startBtnChanged = None, triangleBtnChanged = None,
                  squareBtnChanged = None, circleBtnChanged = None, crossXBtnChanged = None ):
         """ Robot controller initialisation function. Enables callback functions to be passed
             in for the following events:
@@ -175,6 +178,8 @@ class RobotController:
                 
                 selectBtnChanged: A callback function for the Select button (see leftBtn1Changed)
                 
+                homeBtnChanged: A callback function for the Home button (see leftBtn1Changed)
+                
                 startBtnChanged: A callback function for the Start button (see leftBtn1Changed)
                 
                 triangleBtnChanged: A callback function for the triangle symbol button (see leftBtn1Changed)
@@ -186,6 +191,7 @@ class RobotController:
                 crossXBtnChanged: A callback function for the X symbol button (see leftBtn1Changed)
                 
         """
+        
         #Storereferences to callback functions
         self.initStatus = initStatus
         self.leftTriggerChanged = leftTriggerChanged
@@ -200,6 +206,7 @@ class RobotController:
         self.leftStickPressChanged = leftStickPressChanged
         self.rightStickPressChanged = rightStickPressChanged
         self.selectBtnChanged = selectBtnChanged
+        self.homeBtnChanged = homeBtnChanged
         self.startBtnChanged = startBtnChanged
         self.triangleBtnChanged = triangleBtnChanged
         self.squareBtnChanged = squareBtnChanged
@@ -285,7 +292,7 @@ class RobotController:
             #Complete class set up
             
             # Set the width and height of the screen [width,height]
-            size = [500, 700]
+            size = [400, 700]
             self.screen = pygame.display.set_mode(size)
 
             pygame.display.set_caption(title)
@@ -315,7 +322,7 @@ class RobotController:
         
         #Initialise screen display of controller status
         self.textPrint.reset()
-        self.textPrint.print("Controller: {}".format( self.controller.get_name() ) )
+        self.textPrint.print("Controller: {}".format( self.CONTROLLER_DISPLAY_NAMES[self.DETECTED_JOYSTICK_IDX] ) )
         self.textPrint.indent()
         
         #Process analogue sticks
@@ -396,7 +403,7 @@ class RobotController:
                 self.rightTriggerPos = rightTrigger
                 self.rightTriggerChanged( self.rightTriggerPos )
         else:
-            self.textPrint.print("No analogue Left Trigger on this controller" )
+            self.textPrint.print("No analogue Right Trigger on this controller" )
 
         self.textPrint.unindent()
         
@@ -454,101 +461,60 @@ class RobotController:
         #Process buttons
         self.textPrint.print("Simple buttons:" )
         self.textPrint.indent()
+
+        self.leftBtn1State = self.processButton(
+            self.leftBtn1Idx[self.DETECTED_JOYSTICK_IDX],
+            "Left Trigger Button 1", self.leftBtn1State, self.leftBtn1Changed)
+        self.rightBtn1State = self.processButton(
+            self.rightBtn1Idx[self.DETECTED_JOYSTICK_IDX],
+            "Right Trigger Button 1", self.rightBtn1State, self.rightBtn1Changed)
+        if self.leftTriggerIdx[self.DETECTED_JOYSTICK_IDX] == -1 :
+            #No analogue trigger so handle as simple button
+            self.leftBtn2State = self.processButton(
+                self.leftBtn2Idx[self.DETECTED_JOYSTICK_IDX],
+                "Left Trigger Button 2", self.leftBtn2State, self.leftBtn2Changed)
+        if self.rightTriggerIdx[self.DETECTED_JOYSTICK_IDX] == -1 :
+            #No analogue trigger so handle as simple button
+            self.rightBtn2State = self.processButton(
+                self.rightBtn2Idx[self.DETECTED_JOYSTICK_IDX],
+                "Right Trigger Button 2", self.rightBtn2State, self.rightBtn2Changed)
+        
         self.leftStickPressedState = self.processButton(
             self.leftStickPressIdx[self.DETECTED_JOYSTICK_IDX],
             "Left Stick Pressed", self.leftStickPressedState, self.leftStickPressChanged)
-        
-        self.textPrint.unindent()
-        
-        """
-        rightStickPress = self.controller.get_button( self.rightStickPressIdx[self.DETECTED_JOYSTICK_IDX] )
-        self.textPrint.print("Right Stick Pressed: {}".format( rightStickPressedState ) )
-        if self.leftStickPressedState != leftStickPress :
-            self.leftStickPressedState = leftStickPress
-            if self.leftStickPressChanged is not None :
-                self.leftStickPressChanged( self.leftStickPressedState )
-        if self.rightStickPressedState != rightStickPress :
-            self.rightStickPressedState = rightStickPress
-            if self.rightStickPressChanged is not None :
-                self.rightStickPressChanged( self.rightStickPressedState )
-        """
-        
-        leftBtn1 = self.controller.get_button( self.leftBtn1Idx[self.DETECTED_JOYSTICK_IDX] )
-        rightBtn1 = self.controller.get_button( self.rightBtn1Idx[self.DETECTED_JOYSTICK_IDX] )
-        leftBtn2 = self.controller.get_button( self.leftBtn2Idx[self.DETECTED_JOYSTICK_IDX] )
-        rightBtn2 = self.controller.get_button( self.rightBtn2Idx[self.DETECTED_JOYSTICK_IDX] )
-        selectBtn = self.controller.get_button( self.selectBtnIdx[self.DETECTED_JOYSTICK_IDX] )
-        startBtn = self.controller.get_button( self.startBtnIdx[self.DETECTED_JOYSTICK_IDX] )
-        triangleBtn = self.controller.get_button( self.triangleBtnIdx[self.DETECTED_JOYSTICK_IDX] )
-        squareBtn = self.controller.get_button( self.squareBtnIdx[self.DETECTED_JOYSTICK_IDX] )
-        circleBtn = self.controller.get_button( self.circleBtnIdx[self.DETECTED_JOYSTICK_IDX] )
-        crossXBtn = self.controller.get_button( self.crossXBtnIdx[self.DETECTED_JOYSTICK_IDX] )
+        self.rightStickPressedState = self.processButton(
+            self.rightStickPressIdx[self.DETECTED_JOYSTICK_IDX],
+            "Right Stick Pressed", self.rightStickPressedState, self.rightStickPressChanged)
+
+        self.selectBtnState = self.processButton(
+            self.selectBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            "Select Button", self.selectBtnState, self.selectBtnChanged)
+        self.homeBtnState = self.processButton(
+            self.homeBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            "Home Button", self.homeBtnState, self.homeBtnChanged)
+        self.startBtnState = self.processButton(
+            self.startBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            "Start Button", self.startBtnState, self.startBtnChanged)
 
         
-        #Update button states if changed
-        if self.leftBtn1State != leftBtn1 :
-            self.leftBtn1State = leftBtn1
-            if self.leftBtn1Changed is not None :
-                self.leftBtn1Changed( self.leftBtn1State )
-        if self.rightBtn1State != rightBtn1 :
-            self.rightBtn1State = rightBtn1
-            if self.rightBtn1Changed is not None :
-                self.rightBtn1Changed( self.rightBtn1State )
-        if self.leftBtn2State != leftBtn2 :
-            self.leftBtn2State = leftBtn2
-            if self.leftBtn2Changed is not None :
-                self.leftBtn2Changed( self.leftBtn2State )
-        if self.rightBtn2State != rightBtn2 :
-            self.rightBtn2State = rightBtn2
-            if self.rightBtn2Changed is not None :
-                self.rightBtn2Changed( self.rightBtn2State )
-        if self.selectBtnState != selectBtn :
-            self.selectBtnState = selectBtn
-            if self.selectBtnChanged is not None :
-                self.selectBtnChanged( self.selectBtnState )
-        if self.startBtnState != startBtn :
-            self.startBtnState = startBtn
-            if self.startBtnChanged is not None :
-                self.startBtnChanged( self.startBtnState )
-        if self.triangleBtnState != triangleBtn :
-            self.triangleBtnState = triangleBtn
-            if self.triangleBtnChanged is not None :
-                self.triangleBtnChanged( self.triangleBtnState )
-        if self.squareBtnState != squareBtn :
-            self.squareBtnState = squareBtn
-            if self.squareBtnChanged is not None :
-                self.squareBtnChanged( self.squareBtnState )
-        if self.circleBtnState != circleBtn :
-            self.circleBtnState = circleBtn
-            if self.circleBtnChanged is not None :
-                self.circleBtnChanged( self.circleBtnState )
-        if self.crossXBtnState != crossXBtn :
-            self.crossXBtnState = crossXBtn
-            if self.crossXBtnChanged is not None :
-                self.crossXBtnChanged( self.crossXBtnState )
-        """                
-        self.textPrint.print("Front Buttons No.1:" )
-        self.textPrint.indent()
-        self.textPrint.print("Left Front Button: {}".format( leftBtn1State ) )
-        self.textPrint.print("Right Front Button: {}".format( rightBtn1State ) )
+        self.triangleBtnState = self.processButton(
+            self.triangleBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            "Triangle Button", self.triangleBtnState, self.triangleBtnChanged)
+        self.squareBtnState = self.processButton(
+            self.squareBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            "Square Button", self.squareBtnState, self.squareBtnChanged)
+        self.circleBtnState = self.processButton(
+            self.circleBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            "Circle Button", self.circleBtnState, self.circleBtnChanged)
+        self.crossXBtnState = self.processButton(
+            self.crossXBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            "X-Cross Button", self.crossXBtnState, self.crossXBtnChanged)
         self.textPrint.unindent()
-        self.textPrint.print("Front Buttons No.2:" )
-        self.textPrint.indent()
-        self.textPrint.print("Left Front Button: {}".format( leftBtn2State ) )
-        self.textPrint.print("Right Front Button: {}".format( rightBtn2State ) )
-        self.textPrint.unindent()
-        self.textPrint.print("Other Buttons:" )
-        self.textPrint.indent()
-        self.textPrint.print("Select Button: {}".format( selectBtnState ) )
-        self.textPrint.print("Start Button: {}".format( startBtnState ) )
-        self.textPrint.print("Triangle Button: {}".format( triangleBtnState ) )
-        self.textPrint.print("Square Button: {}".format( squareBtnState ) )
-        self.textPrint.print("Circle Button: {}".format( circleBtnState ) )
-        self.textPrint.print("X-cross Button: {}".format( crossXBtnState ) )
-        self.textPrint.unindent()
+        
+        #Display any message text set outside the class
         self.textPrint.print("")
         self.textPrint.print( self.message )
-        """
+        
         # Limit to 20 frames per second
         self.clock.tick(20)
         
