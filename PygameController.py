@@ -1,12 +1,4 @@
 #!/usr/bin/env python3
-
-#Import lines for dev build of pygame on Ubuntu (remove this pair of lines for raspberry pi)
-#I added them so I could develop in Thonny on Ubuntu using the latested development build of 
-#pygame, as the packaged version of pygame that Thonny offered did not detect the full set of
-#features of the game controllers I was using.
-import sys
-sys.path.append('/usr/local/lib/python3.5/dist-packages/pygame-1.9.4.dev0-py3.5-linux-i686.egg')
-
 import pygame
 
 
