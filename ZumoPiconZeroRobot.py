@@ -3,6 +3,7 @@ import pygame, sys, time, math
 import blinkt as blkt
 import random
 from PygameController import RobotController
+from BlinktController import initStatus
 
 sys.path.append('/home/pi/piconzero/')
 
@@ -10,26 +11,6 @@ import piconzero3 as pz
 
 #Global variables
 message = ""
-    
-def initStatus(status):
-    """Callback function which displays status during initialisation"""
-    if status == 0 :
-        print("Supported controller connected")
-        blkt.set_all(0,0,255)
-    elif status < 0 :
-        print("No supported controller detected")
-        #Show red LEDs for 5 seconds before program exits and turns them all off
-        blkt.set_all(255,0,0)
-        blkt.show()
-        time.sleep(5)
-    else:
-        print("Waiting for controller {}".format(status) )
-        if status < 9 :
-            blkt.set_pixel(status-1,255,128,0)
-        elif status < 17 :
-            blkt.set_pixel(status-9,255,50,0)
-
-    blkt.show()
 
 
 def leftStickChangeHandlerV2(valLR, valUD):
@@ -65,7 +46,33 @@ def leftStickChangeHandlerV2(valLR, valUD):
 
     global message
     message = mode + " Speed L: {}, Speed R: {}".format( speedL, speedR ) 
-
+    
+    #Set LEDs based on motor speeds
+    colR = 0
+    colG = 0
+    colB = 0
+    if speedL > 0:
+        colR = speedL
+    else:
+        colG = -speedL
+        
+    if speedR > 0:
+        colB = speedR
+    elif speedL > 0:
+        colG = -speedR
+    else:
+        colR = -speedR
+    
+    blkt.clear()
+    for i in range( 0, int( (abs(speedL) + abs(speedR)) * 8 / 250 ) ):
+        if ( (speedL + speedR) < 0 ) or ( (speedL == -speedR) and (speedL > 0) ):
+            idx = 7 - i
+        else:
+            idx = i
+        blkt.set_pixel(idx,colR,colG,colB)
+    blkt.show()
+        
+    #Set motor speeds
     pz.setMotor(0, speedL)
     pz.setMotor(1, speedR)
 

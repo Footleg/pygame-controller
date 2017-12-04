@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import pygame
+from time import sleep
 import blinkt as blkt
 import random
 from PygameController import RobotController
@@ -37,13 +38,23 @@ def initStatus(status):
         blkt.set_all(0,0,255)
     elif status < 0 :
         print("No supported controller detected")
-        blkt.set_all(255,0,0)
+        for i in range(1,7):
+            blkt.set_all(255,0,0)
+            blkt.show()
+            sleep(0.25)
+            blkt.clear()
+            blkt.show()
+            sleep(0.25)
     else:
         print("Waiting for controller {}".format(status) )
         if status < 9 :
-            blkt.set_pixel(status-1,255,128,0)
+            blkt.set_pixel(status-1,96,0,96)
         elif status < 17 :
-            blkt.set_pixel(status-9,255,50,0)
+            blkt.set_pixel(status-9,96,96,0)
+        elif status < 25 :
+            blkt.set_pixel(status-17,192,40,0)
+        elif status < 33 :
+            blkt.set_pixel(status-25,164,2,2)
 
     blkt.show()
 

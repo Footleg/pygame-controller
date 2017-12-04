@@ -126,10 +126,10 @@ class RobotController:
                     during initialisation of the application. The function given as this argument
                     will be called while the application is detecting a supported game controller.
                     A status code of 0 indicates a controller was successfully detected.
-                    Status codes in the range 1 - 16 indicate attempts to detect a controller. While
+                    Status codes in the range 1 - 32 indicate attempts to detect a controller. While
                     these values are being returned, the application is waiting for a controller to
                     be connected (via cable or bluetooth). The status value indicates how many
-                    attempts have been made. After 16 attempts if no supported controller has been
+                    attempts have been made. After 32 attempts if no supported controller has been
                     detected then the application will return the status code -1, and then exit.
                 
                 leftTriggerChanged: A callback function which will be passed the position value of
@@ -208,7 +208,7 @@ class RobotController:
         #Look for supported game controller
         controllerFound = False
         lastCount = 0
-        for retries in range(1, 17):
+        for retries in range(1, 33):
             #Initialise pygame
             pygame.init()
 
