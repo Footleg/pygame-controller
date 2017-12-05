@@ -231,16 +231,16 @@ class RobotController:
 
                     # Get the name from the OS for the controller/joystick
                     name = joystick.get_name()
+                    print("Joystick {} detected as ".format(i) + name )
                     
-                    if name in self.SUPPORTED_JOYSTICKS :
-                        print("Joystick {} detected as ".format(i) + name )
-                        
-                        #Determine which joystick type was detected
-                        for i in range(0, len(self.SUPPORTED_JOYSTICKS)-1) :
-                            if name in self.SUPPORTED_JOYSTICKS[i] :
-                                self.DETECTED_JOYSTICK_IDX = i
-                                break
+                    #Determine whether detected joystick is a supported model type 
+                    for j in range(0, len(self.SUPPORTED_JOYSTICKS)-1) :
+                        #Looking for the supporter name text as a substring of the detected full name
+                        if self.SUPPORTED_JOYSTICKS[j] in name:
+                            self.DETECTED_JOYSTICK_IDX = j
+                            break
                                     
+                    if self.DETECTED_JOYSTICK_IDX > -1 :
                         #Check the controller matches the expected specifications
                         axes = joystick.get_numaxes()
                         if axes == self.AXES[self.DETECTED_JOYSTICK_IDX] :
