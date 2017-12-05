@@ -37,41 +37,44 @@ class RobotController:
     """
     
     #Data for supported controllers
-    SUPPORTED_JOYSTICKS = ("PLAYSTATION(R)3 Controller","Sony PLAYSTATION(R)3 Controller",
-                           "Performance Designed Products Rock Candy Wireless Gamepad for PS3")
+    SUPPORTED_JOYSTICKS = ("PLAYSTATION(R)3",
+                           "Rock Candy Wireless Gamepad for PS3",
+                           "hongjingda HJD-X")
     DETECTED_JOYSTICK_IDX = -1
     
     #Define specifications of each supported controller
-    AXES = (27,4)
-    BTNS = (19,13)
-    HATS = (0,1)
-    CONTROLLER_DISPLAY_NAMES = ("Sony PS3 Dualshock 6-axis Controller","Rock Candy Wireless Gamepad for PS3")
+    AXES = (27,4,6)
+    BTNS = (19,13,16)
+    HATS = (0,1,1)
+    CONTROLLER_DISPLAY_NAMES = ("Sony PS3 Dualshock 6-axis Controller",
+                                "Rock Candy Wireless Gamepad for PS3",
+                                "ThePiHut Wiresless USB Game Controller")
     
     #Define indices for each control for the different supported controllers
-    leftTriggerIdx = (12,-1)
-    rightTriggerIdx = (13,-1)
-    leftStickLRIdx = (0,0)
-    leftStickUDIdx = (1,1)
-    rightStickLRIdx = (2,2)
-    rightStickUDIdx = (3,3)
-    leftBtn1Idx = (10,4)
-    rightBtn1Idx = (11,5)
-    leftBtn2Idx = (8,6)
-    rightBtn2Idx = (9,7)
-    hatLeftIdx = (7,-1)
-    hatRightIdx = (5,-1)
-    hatUpIdx = (4,-1)
-    hatDownIdx = (6,-1)
-    hatIdx = (-1,0)
-    leftStickPressIdx = (1,10)
-    rightStickPressIdx = (2,11)
-    selectBtnIdx = (0,8)
-    homeBtnIdx = (16,12)
-    startBtnIdx = (3,9)
-    triangleBtnIdx = (12,3)
-    squareBtnIdx = (15,0)
-    circleBtnIdx = (13,2)
-    crossXBtnIdx = (14,1)
+    leftTriggerIdx = (12,-1,4)
+    rightTriggerIdx = (13,-1,5)
+    leftStickLRIdx = (0,0,0)
+    leftStickUDIdx = (1,1,1)
+    rightStickLRIdx = (2,2,2)
+    rightStickUDIdx = (3,3,3)
+    leftBtn1Idx = (10,4,6)
+    rightBtn1Idx = (11,5,7)
+    leftBtn2Idx = (8,6,8)
+    rightBtn2Idx = (9,7,9)
+    hatLeftIdx = (7,-1,-1)
+    hatRightIdx = (5,-1,-1)
+    hatUpIdx = (4,-1,-1)
+    hatDownIdx = (6,-1,-1)
+    hatIdx = (-1,0,0)
+    leftStickPressIdx = (1,10,13)
+    rightStickPressIdx = (2,11,14)
+    selectBtnIdx = (0,8,10)
+    homeBtnIdx = (16,12,12)
+    startBtnIdx = (3,9,11)
+    triangleBtnIdx = (12,3,4)
+    squareBtnIdx = (15,0,3)
+    circleBtnIdx = (13,2,1)
+    crossXBtnIdx = (14,1,0)
 
     initialised = False
     
@@ -234,13 +237,8 @@ class RobotController:
                         
                         #Determine which joystick type was detected
                         for i in range(0, len(self.SUPPORTED_JOYSTICKS)-1) :
-                            if name == self.SUPPORTED_JOYSTICKS[i] :
-                                if i < 2 :
-                                    #Genuine Sony PS3 Dualshock 6 axis controller
-                                    self.DETECTED_JOYSTICK_IDX = 0
-                                else :
-                                    #Rock Candy PS3 controller
-                                    self.DETECTED_JOYSTICK_IDX = 1
+                            if name in self.SUPPORTED_JOYSTICKS[i] :
+                                self.DETECTED_JOYSTICK_IDX = i
                                 break
                                     
                         #Check the controller matches the expected specifications
