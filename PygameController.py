@@ -234,7 +234,7 @@ class RobotController:
                     print("Joystick {} detected as ".format(i) + name )
                     
                     #Determine whether detected joystick is a supported model type 
-                    for j in range(0, len(self.SUPPORTED_JOYSTICKS)-1) :
+                    for j in range(0, len(self.SUPPORTED_JOYSTICKS) ) :
                         #Looking for the supporter name text as a substring of the detected full name
                         if self.SUPPORTED_JOYSTICKS[j] in name:
                             self.DETECTED_JOYSTICK_IDX = j
