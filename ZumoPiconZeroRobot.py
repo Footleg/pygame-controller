@@ -8,6 +8,7 @@ from BlinktController import initStatus
 sys.path.append('/home/pi/piconzero/')
 
 import piconzero3 as pz
+import hcsr04_bcm as hcsr04
 
 #Global variables
 message = ""
@@ -78,11 +79,13 @@ def leftStickChangeHandlerV2(valLR, valUD):
 
 
 def main():
+    global message
     
     ## Check that required hardware is connected ##
 
     #Initialise the controller board
     pz.init()
+    hcsr04.init()
 
     #Confirm board detected
     vsn = pz.getRevision()
@@ -117,14 +120,24 @@ def main():
             
             # Trigger stick events and check for quit
             keepRunning = cnt.controllerStatus()
+            
+            #Measure distance
+            testDist = hcsr04.getDistanceClean()
+            if testDist > 0 :
+                distance = testDist
+            else:
+                distance = 1000
+                
+            message = "Distance {}".format(distance)
     
     finally:
         #Clean up and turn off Blinkt LEDs
         pz.stop()
         pz.cleanup()
-        pygame.quit()
         blkt.clear()
         blkt.show()
+        hcsr04.cleanup()
+        pygame.quit()
 
 
 if __name__ == '__main__':
