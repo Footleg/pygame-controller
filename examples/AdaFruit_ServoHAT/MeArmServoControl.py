@@ -98,6 +98,7 @@ def main():
     #All together
     for i in range(0,4):
         setArmPosition(i,80)
+    
     time.sleep(1)
 
     for i in range(0,4):
