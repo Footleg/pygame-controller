@@ -16,14 +16,15 @@ posJaws = 0
 
 turnValue = 0
 turnSpeed = 3
-
+jawsChange = 0
+jawsSpeed = 5
 
 def resetArm():
     global posBase, posReach, posLift, posJaws
     
     posBase = ((arm.turnMax - arm.turnMin)/2) + arm.turnMin
-    posLift = ((arm.liftMax - arm.liftMin)/2) + arm.liftMin
-    posReach = ((arm.fwdMax - arm.fwdMin)/2) + arm.fwdMin
+    posLift = ((arm.liftMax - arm.liftMin)*1/4) + arm.liftMin
+    posReach = ((arm.fwdMax - arm.fwdMin)*1/4) + arm.fwdMin
     posJaws = arm.jawsMax
     
     arm.setArmPosition ( arm.jawsChannel, posJaws )
@@ -57,6 +58,7 @@ def leftTriggerChangeHandler(val):
 
 def rightTriggerChangeHandler(val):
     """Handler function for right analogue trigger"""
+    leftTriggerChangeHandler(val)
     
     
 def rightStickChangeHandler(valLR, valUD):
@@ -76,27 +78,28 @@ def leftStickChangeHandler(valLR, valUD):
 def hatChangeHandler(valUD, valLR):
     """Handler function for hat"""
     global turnValue
+    global jawsChange
     turnValue = -valLR
+    jawsChange = -valUD
 
 
-def turnLeft(valLR):
+def turnLeft(val):
     global turnValue
-    turnValue = valLR
+    turnValue = val
 
 
-def turnRight(valLR):
+def turnRight(val):
     global turnValue
-    turnValue = -valLR
+    turnValue = -val
 
 
 def main():
     #Run in try..finally structure so that program exits gracefully on hitting any
     #errors in the callback functions
-    global posBase
-    global turnValue
+    global posBase, turnValue, posJaws, jawsChange
     
     try:
-        cnt = RobotController("Servo and Blinkt Controller", initStatus,
+        cnt = RobotController("MeArm Controller", initStatus,
                               leftTriggerChanged = leftTriggerChangeHandler,
                               rightTriggerChanged = rightTriggerChangeHandler,
                               leftStickChanged = leftStickChangeHandler,
@@ -124,6 +127,11 @@ def main():
                     posBase = newBase
                     arm.setArmPosition ( arm.turnChannel, posBase )
 
+            if jawsChange != 0 :
+                newJaws = posJaws + (jawsChange * jawsSpeed)
+                if arm.jawsMin <= newJaws <= arm.jawsMax :
+                    posJaws = newJaws
+                    arm.setArmPosition ( arm.jawsChannel, posJaws )
 
     finally:
         #Clean up and turn off Blinkt LEDs
