@@ -1,39 +1,55 @@
 #!/usr/bin/python
 
-import MeArmServoControl as arm
-from ../../PygameController import RobotController
+import sys
+sys.path.append('./../../')
+
+from PygameController import RobotController
 import pygame
-import blinkt as blkt
+import MeArmServoControl as arm
 
 
 #Declare variables to hold servo positions
-posBase = ((arm.turnMax - arm.turnMin)/2) + arm.turnMin
-posLift = ((arm.liftMax - arm.liftMin)/2) + arm.liftMin
-posReach = ((arm.fwdMax - arm.fwdMin)/2) + arm.fwdMin
-posJaws = arm.jawsMin
+posBase = 0
+posLift = 0
+posReach = 0
+posJaws = 0
+
 turnValue = 0
 turnSpeed = 3
+
+
+def resetArm():
+    global posBase, posReach, posLift, posJaws
+    
+    posBase = ((arm.turnMax - arm.turnMin)/2) + arm.turnMin
+    posLift = ((arm.liftMax - arm.liftMin)/2) + arm.liftMin
+    posReach = ((arm.fwdMax - arm.fwdMin)/2) + arm.fwdMin
+    posJaws = arm.jawsMax
+    
+    arm.setArmPosition ( arm.jawsChannel, posJaws )
+    arm.setArmPosition ( arm.liftChannel, posLift )
+    arm.setArmPosition ( arm.fwdChannel, posReach )
+    arm.setArmPosition ( arm.turnChannel, posBase )
+    
 
 def initStatus(status):
     """Callback function which displays status during initialisation"""
     if status == 0 :
         print("Supported controller connected")
-        blkt.set_all(0,0,255)
     elif status < 0 :
         print("No supported controller detected")
-        blkt.set_all(255,0,0)
     else:
         print("Waiting for controller {}".format(status) )
-        if status < 9 :
-            blkt.set_pixel(status-1,255,128,0)
-        elif status < 17 :
-            blkt.set_pixel(status-9,255,50,0)
-
-    blkt.show()
-
-
+        if status % 2 > 0:
+            arm.setArmPosition ( arm.jawsChannel, arm.jawsMax )
+        else:
+            arm.setArmPosition ( arm.jawsChannel, arm.jawsMax - 20)
+            
+        
 def leftTriggerChangeHandler(val):
-    """Handler function for left analogue trigger"""
+    """ Handler function for left analogue trigger:
+        Controls the MeArm jaws
+    """
     global posJaws
     posJaws = ( ( (-val+1) / 2) * ( arm.jawsMax - arm.jawsMin ) ) + arm.jawsMin
     arm.setArmPosition ( arm.jawsChannel, posJaws )
@@ -92,8 +108,7 @@ def main():
 
         if cnt.initialised :
             keepRunning = True
-            blkt.set_all(0,255,0)
-            blkt.show()
+            resetArm()
         else:
             keepRunning = False
             
@@ -101,6 +116,8 @@ def main():
         while keepRunning == True :
             # Trigger stick events and check for quit
             keepRunning = cnt.controllerStatus()
+            
+            #Update arm servo positions based on changes made in event handlers
             if turnValue != 0 :
                 newBase = posBase + (turnValue * turnSpeed)
                 if arm.turnMin <= newBase <= arm.turnMax :
@@ -112,8 +129,7 @@ def main():
         #Clean up and turn off Blinkt LEDs
         pygame.quit()
         if cnt.initialised :
-            blkt.clear()
-            blkt.show()
+            resetArm()
 
 if __name__ == '__main__':
     main()

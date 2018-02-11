@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-import pygame, sys, time, math
-import random
-from PygameController import RobotController
 
+import sys
+sys.path.append('./../../')
 sys.path.append('/home/pi/piconzero/')
 
+import pygame, random, time, math
+from PygameController import RobotController
 import piconzero3 as pz
 
 #Initialise lobal variables

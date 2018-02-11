@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-import pygame, sys, time, math
-import blinkt as blkt
-import random
-from PygameController import RobotController
-from BlinktController import initStatus
 
+import sys
+sys.path.append('./../../')
+sys.path.append('./../Blinkt/')
 sys.path.append('/home/pi/piconzero/')
 
+import pygame, random, time, math
+import blinkt as blkt
+from PygameController import RobotController
+from BlinktController import initStatus
 import piconzero3 as pz
 import hcsr04_bcm as hcsr04
 
