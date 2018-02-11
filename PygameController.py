@@ -1,12 +1,4 @@
 #!/usr/bin/env python3
-
-#Import lines for dev build of pygame on Ubuntu (remove this pair of lines for raspberry pi)
-#I added them so I could develop in Thonny on Ubuntu using the latested development build of 
-#pygame, as the packaged version of pygame that Thonny offered did not detect the full set of
-#features of the game controllers I was using.
-import sys
-sys.path.append('/usr/local/lib/python3.5/dist-packages/pygame-1.9.4.dev0-py3.5-linux-i686.egg')
-
 import pygame
 
 
@@ -45,41 +37,46 @@ class RobotController:
     """
     
     #Data for supported controllers
-    SUPPORTED_JOYSTICKS = ("PLAYSTATION(R)3 Controller","Sony PLAYSTATION(R)3 Controller",
-                           "Performance Designed Products Rock Candy Wireless Gamepad for PS3")
+    SUPPORTED_JOYSTICKS = ("PLAYSTATION(R)3",
+                           "Rock Candy Wireless Gamepad for PS3",
+                           "hongjingda HJD-X",
+                           "PS3/USB Corded Gamepad")
     DETECTED_JOYSTICK_IDX = -1
     
     #Define specifications of each supported controller
-    AXES = (27,4)
-    BTNS = (19,13)
-    HATS = (0,1)
-    CONTROLLER_DISPLAY_NAMES = ("Sony PS3 Dualshock 6-axis Controller","Rock Candy Wireless Gamepad for PS3")
+    AXES = (27,4,6,4)
+    BTNS = (19,13,16,12)
+    HATS = (0,1,1,1)
+    CONTROLLER_DISPLAY_NAMES = ("Sony PS3 Dualshock 6-axis Controller",
+                                "Rock Candy Wireless Gamepad for PS3",
+                                "ThePiHut Wiresless USB Game Controller",
+                                "Argos PS3 Compatible Gamepad")
     
     #Define indices for each control for the different supported controllers
-    leftTriggerIdx = (12,-1)
-    rightTriggerIdx = (13,-1)
-    leftStickLRIdx = (0,0)
-    leftStickUDIdx = (1,1)
-    rightStickLRIdx = (2,2)
-    rightStickUDIdx = (3,3)
-    leftBtn1Idx = (10,4)
-    rightBtn1Idx = (11,5)
-    leftBtn2Idx = (8,6)
-    rightBtn2Idx = (9,7)
-    hatLeftIdx = (7,-1)
-    hatRightIdx = (5,-1)
-    hatUpIdx = (4,-1)
-    hatDownIdx = (6,-1)
-    hatIdx = (-1,0)
-    leftStickPressIdx = (1,10)
-    rightStickPressIdx = (2,11)
-    selectBtnIdx = (0,8)
-    homeBtnIdx = (16,12)
-    startBtnIdx = (3,9)
-    triangleBtnIdx = (12,3)
-    squareBtnIdx = (15,0)
-    circleBtnIdx = (13,2)
-    crossXBtnIdx = (14,1)
+    leftTriggerIdx = (12,-1,4,-1)
+    rightTriggerIdx = (13,-1,5,-1)
+    leftStickLRIdx = (0,0,0,0)
+    leftStickUDIdx = (1,1,1,1)
+    rightStickLRIdx = (2,2,2,2)
+    rightStickUDIdx = (3,3,3,3)
+    leftBtn1Idx = (10,4,6,4)
+    rightBtn1Idx = (11,5,7,5)
+    leftBtn2Idx = (8,6,8,6)
+    rightBtn2Idx = (9,7,9,7)
+    hatLeftIdx = (7,-1,-1,-1)
+    hatRightIdx = (5,-1,-1,-1)
+    hatUpIdx = (4,-1,-1,-1)
+    hatDownIdx = (6,-1,-1,-1)
+    hatIdx = (-1,0,0,0)
+    leftStickPressIdx = (1,10,13,10)
+    rightStickPressIdx = (2,11,14,11)
+    selectBtnIdx = (0,8,10,8)
+    homeBtnIdx = (16,12,12,-1)
+    startBtnIdx = (3,9,11,9)
+    triangleBtnIdx = (12,3,4,0)
+    squareBtnIdx = (15,0,3,3)
+    circleBtnIdx = (13,2,1,1)
+    crossXBtnIdx = (14,1,0,2)
 
     initialised = False
     
@@ -134,10 +131,10 @@ class RobotController:
                     during initialisation of the application. The function given as this argument
                     will be called while the application is detecting a supported game controller.
                     A status code of 0 indicates a controller was successfully detected.
-                    Status codes in the range 1 - 16 indicate attempts to detect a controller. While
+                    Status codes in the range 1 - 32 indicate attempts to detect a controller. While
                     these values are being returned, the application is waiting for a controller to
                     be connected (via cable or bluetooth). The status value indicates how many
-                    attempts have been made. After 16 attempts if no supported controller has been
+                    attempts have been made. After 32 attempts if no supported controller has been
                     detected then the application will return the status code -1, and then exit.
                 
                 leftTriggerChanged: A callback function which will be passed the position value of
@@ -216,7 +213,7 @@ class RobotController:
         #Look for supported game controller
         controllerFound = False
         lastCount = 0
-        for retries in range(1, 17):
+        for retries in range(1, 33):
             #Initialise pygame
             pygame.init()
 
@@ -236,21 +233,16 @@ class RobotController:
 
                     # Get the name from the OS for the controller/joystick
                     name = joystick.get_name()
+                    print("Joystick {} detected as ".format(i) + name )
                     
-                    if name in self.SUPPORTED_JOYSTICKS :
-                        print("Joystick {} detected as ".format(i) + name )
-                        
-                        #Determine which joystick type was detected
-                        for i in range(0, len(self.SUPPORTED_JOYSTICKS)-1) :
-                            if name == self.SUPPORTED_JOYSTICKS[i] :
-                                if i < 2 :
-                                    #Genuine Sony PS3 Dualshock 6 axis controller
-                                    self.DETECTED_JOYSTICK_IDX = 0
-                                else :
-                                    #Rock Candy PS3 controller
-                                    self.DETECTED_JOYSTICK_IDX = 1
-                                break
+                    #Determine whether detected joystick is a supported model type 
+                    for j in range(0, len(self.SUPPORTED_JOYSTICKS) ) :
+                        #Looking for the supporter name text as a substring of the detected full name
+                        if self.SUPPORTED_JOYSTICKS[j] in name:
+                            self.DETECTED_JOYSTICK_IDX = j
+                            break
                                     
+                    if self.DETECTED_JOYSTICK_IDX > -1 :
                         #Check the controller matches the expected specifications
                         axes = joystick.get_numaxes()
                         if axes == self.AXES[self.DETECTED_JOYSTICK_IDX] :
