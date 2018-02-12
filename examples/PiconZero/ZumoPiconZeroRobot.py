@@ -8,7 +8,7 @@ sys.path.append('/home/pi/piconzero/')
 import pygame, random, time, math
 import blinkt as blkt
 from PygameController import RobotController
-from BlinktController import initStatus
+from BlinktController import initStatus, showIP
 import piconzero3 as pz
 import hcsr04_bcm as hcsr04
 
@@ -80,6 +80,10 @@ def leftStickChangeHandlerV2(valLR, valUD):
     pz.setMotor(1, speedR)
 
 
+def startBtnHandler(btnState):
+    if btnState == 1:
+        showIP()
+    
 def main():
     global message
     
@@ -107,7 +111,8 @@ def main():
     #errors in the callback functions
     try:
         cnt = RobotController("Zumo Robot with Blinkt", initStatus,
-                              leftStickChanged = leftStickChangeHandlerV2 )
+                              leftStickChanged = leftStickChangeHandlerV2,
+                              startBtnChanged = startBtnHandler)
         
         if cnt.initialised :
             keepRunning = True
