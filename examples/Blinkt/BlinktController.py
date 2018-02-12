@@ -3,7 +3,7 @@
 import sys
 sys.path.append('./../../')
 
-import pygame
+import pygame, subprocess
 from time import sleep
 import blinkt as blkt
 import random
@@ -34,6 +34,41 @@ def colourBar(controllerValue,colR,colG,colB,reverse):
         blkt.set_pixel(idx,colR,colG,colB)
     blkt.show()
 
+    
+def showDigit(digit):
+    if digit < 9:
+        blkt.set_all(0,0,255)
+        for i in range(digit):
+            blkt.set_pixel(i,0,255,0)
+    elif digit == 9:
+        blkt.set_all(0,255,0)
+        for i in range(2,6):
+            blkt.set_pixel(i,0,0,255)
+    else:
+        blkt.set_all(255,0,0)
+    
+    blkt.show()
+    
+
+def showIP():
+    #Show IP address
+    ip = subprocess.getoutput("hostname -I")
+    for i in range(len(ip)):
+        chr = ip[i]
+        if chr.isdigit():
+            showDigit(int(chr))
+        elif ord(chr) == 46:
+            blkt.clear()
+            blkt.set_pixel(3,255,0,255)
+            blkt.show()
+        elif ord(chr) == 32:
+            blkt.clear()
+            blkt.show()
+        else:
+            blkt.set_all(0,255,255)
+            blkt.show()
+        sleep(1)
+    
     
 def initStatus(status):
     """Callback function which displays status during initialisation"""
@@ -108,10 +143,7 @@ def rightStickPressHandler(val):
 def selectBtnHandler(val):
     """Handler function for Select button"""
     if val == 1 :
-        blkt.set_all(180,180,0)
-    else:
-        blkt.clear()
-    blkt.show()
+        showIP()
 
 
 def startBtnHandler(val):
