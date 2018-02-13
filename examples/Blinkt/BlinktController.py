@@ -191,7 +191,7 @@ def rightFrontBtn2Handler(val):
     blkt.show()
 
 
-def hatBtnHandler(valUD,valLR):
+def hatBtnHandler(valLR, valUD):
     if valUD == 1 :
         randomColour(0)
     elif valUD == -1 :

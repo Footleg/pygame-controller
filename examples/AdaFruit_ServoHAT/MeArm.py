@@ -75,7 +75,7 @@ def leftStickChangeHandler(valLR, valUD):
     arm.setArmPosition ( arm.fwdChannel, posReach )
  
  
-def hatChangeHandler(valUD, valLR):
+def hatChangeHandler(valLR, valUD):
     """Handler function for hat"""
     global turnValue
     global jawsChange

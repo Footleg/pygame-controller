@@ -163,9 +163,9 @@ class RobotController:
                 rightBtn2Changed: A callback function for the right front button 2 (see leftBtn1Changed)
                 
                 hatChanged: A callback function which will be passed the states of the buttons on
-                    the 4-way hat as a pair of integers representing the Up/Down and Left/Right states of the
-                    hat buttons. The Up/Down state = 1 for up, 0 for centre and -1 for down. The Left/Right
-                    state = -1 for left, 0 for centre and 1 for right. This function will only be called when the 
+                    the 4-way hat as a pair of integers representing the Left/Right and Up/Down states of the
+                    hat buttons. The Left/Right state = -1 for left, 0 for centre and 1 for right. The Up/Down
+                    state = 1 for up, 0 for centre and -1 for down. This function will only be called when the 
                     hat state changes, so your application code will only be called when something needs
                     to be updated.
                 
@@ -448,7 +448,7 @@ class RobotController:
         and (self.hatUDState != hatUD or self.hatLRState != hatLR) ):
             self.hatUDState = hatUD
             self.hatLRState = hatLR
-            self.hatChanged( self.hatUDState, self.hatLRState )
+            self.hatChanged( self.hatLRState, self.hatUDState )
         
         #Process buttons
         self.textPrint.print("Simple buttons:" )
