@@ -10,7 +10,7 @@ This folder contains the examples for using Pygame Controller with various hardw
 
 ## Pimoroni Blinkt
 
-[BlinktController.py](/examples/Blinkt/BlinktController.py) This module demonstrates how different controls on a game controller can be interfaced to your code using PygameController and the 8 RGB LED Blinkt add-on. It includes an example of an initialise callback function which indicates when the program is waiting for a bluetooth controller to be paired, when a supported controller is successfully detected, and when no supported controller is found. This initialise method is reused in some of the robot examples where a Blinkt is attached for feedback in addition to a robot controller HAT.
+[BlinktController.py](/examples/Blinkt/BlinktController.py) This module demonstrates how different controls on a game controller can be interfaced to your code using PygameController and the 8 RGB LED Blinkt add-on. It includes an example of an initialise callback function which indicates when the program is waiting for a bluetooth controller to be paired, when a supported controller is successfully detected, and when no supported controller is found. This initialise method is reused in some of the robot examples where a Blinkt is attached for feedback in addition to a robot controller HAT. This module also includes a method to display the IP address of a Raspberry Pi on the Blinkt, for when no monitor is connected and you want to VNC onto to Pi.
 
 ## 4tronix Picon Zero robot controller pHAT
 
