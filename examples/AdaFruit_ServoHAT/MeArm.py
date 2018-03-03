@@ -14,10 +14,19 @@ posLift = 0
 posReach = 0
 posJaws = 0
 
+#Variables to hold values to control change in position of each servo
 turnValue = 0
 turnSpeed = 3
+liftChange = 0
+liftSpeed = 4
+reachChange = 0
+reachSpeed = 4
 jawsChange = 0
 jawsSpeed = 5
+
+#Control modes map the controller in different ways to the servos
+controlMode = 1
+
 
 def resetArm():
     global posBase, posReach, posLift, posJaws
@@ -61,20 +70,30 @@ def rightTriggerChangeHandler(val):
     leftTriggerChangeHandler(val)
     
     
-def rightStickChangeHandler(valLR, valUD):
-    """Handler function for right analogue stick"""
-    global posLift
-    posLift = ( ( (-valUD+1) / 2) * ( arm.liftMax - arm.liftMin ) ) + arm.liftMin
-    arm.setArmPosition ( arm.liftChannel, posLift )
-
-    
 def leftStickChangeHandler(valLR, valUD):
     """Handler function for right analogue stick"""
-    global posReach
-    posReach = ( ( (-valUD+1) / 2) * ( arm.fwdMax - arm.fwdMin ) ) + arm.fwdMin
-    arm.setArmPosition ( arm.fwdChannel, posReach )
- 
- 
+    global posReach, reachChange
+    #global turnValue
+    
+    if controlMode == 0:
+        posReach = ( ( (-valUD+1) / 2) * ( arm.fwdMax - arm.fwdMin ) ) + arm.fwdMin
+        arm.setArmPosition ( arm.fwdChannel, posReach )
+    else:
+        #turnValue = -valLR
+        reachChange = -valUD
+        
+    
+def rightStickChangeHandler(valLR, valUD):
+    """Handler function for right analogue stick"""
+    global posLift, liftChange
+    
+    if controlMode == 0:
+        posLift = ( ( (-valUD+1) / 2) * ( arm.liftMax - arm.liftMin ) ) + arm.liftMin
+        arm.setArmPosition ( arm.liftChannel, posLift )
+    else:
+        liftChange = -valUD
+
+
 def hatChangeHandler(valLR, valUD):
     """Handler function for hat"""
     global turnValue
@@ -93,10 +112,20 @@ def turnRight(val):
     turnValue = -val
 
 
+def toggleMode(val):
+    global controlMode
+    
+    if val == 1:
+        if controlMode == 0:
+            controlMode = 1
+        else:
+            controlMode = 0
+    
+
 def main():
     #Run in try..finally structure so that program exits gracefully on hitting any
     #errors in the callback functions
-    global posBase, turnValue, posJaws, jawsChange
+    global posBase, turnValue, posJaws, jawsChange, posReach, posLift
     
     try:
         cnt = RobotController("MeArm Controller", initStatus,
@@ -106,7 +135,8 @@ def main():
                               rightStickChanged = rightStickChangeHandler,
                               hatChanged = hatChangeHandler,
                               leftBtn1Changed = turnLeft,
-                              rightBtn1Changed = turnRight
+                              rightBtn1Changed = turnRight,
+                              triangleBtnChanged = toggleMode
                               )
 
         if cnt.initialised :
@@ -119,6 +149,8 @@ def main():
         while keepRunning == True :
             # Trigger stick events and check for quit
             keepRunning = cnt.controllerStatus()
+            message = "Control Mode: {}".format(controlMode)
+            cnt.message = message
             
             #Update arm servo positions based on changes made in event handlers
             if turnValue != 0 :
@@ -132,6 +164,19 @@ def main():
                 if arm.jawsMin <= newJaws <= arm.jawsMax :
                     posJaws = newJaws
                     arm.setArmPosition ( arm.jawsChannel, posJaws )
+                    
+            if controlMode == 1:
+                if liftChange != 0:
+                    newLift = posLift + (liftChange * liftSpeed)
+                    if arm.liftMin <= newLift <= arm.liftMax:
+                        posLift = newLift
+                        arm.setArmPosition( arm.liftChannel, posLift )
+                if reachChange != 0:
+                    newReach = posReach + (reachChange * reachSpeed )
+                    if arm.fwdMin <= newReach <= arm.fwdMax:
+                        posReach = newReach
+                        arm.setArmPosition( arm.fwdChannel, posReach )
+                    
 
     finally:
         #Clean up and turn off Blinkt LEDs
