@@ -77,8 +77,10 @@ class RobotController:
     squareBtnIdx = (15,0,3,3)
     circleBtnIdx = (13,2,1,1)
     crossXBtnIdx = (14,1,0,2)
-
+    
+    #Properties holding program status or controlling behaviour
     initialised = False
+    displayControllerOutput = True
     
     #Message text to be displayed in window which can be set from outside the class
     message = ""
@@ -313,9 +315,10 @@ class RobotController:
         """
         
         #Initialise screen display of controller status
-        self.textPrint.reset()
-        self.textPrint.print("Controller: {}".format( self.CONTROLLER_DISPLAY_NAMES[self.DETECTED_JOYSTICK_IDX] ) )
-        self.textPrint.indent()
+        if self.displayControllerOutput == True:
+            self.textPrint.reset()
+            self.textPrint.print("Controller: {}".format( self.CONTROLLER_DISPLAY_NAMES[self.DETECTED_JOYSTICK_IDX] ) )
+            self.textPrint.indent()
         
         #Process analogue sticks
         if (self.leftStickLRIdx[self.DETECTED_JOYSTICK_IDX] != -1
@@ -323,12 +326,14 @@ class RobotController:
             #Get stick postitions
             leftStickLR = self.controller.get_axis( self.leftStickLRIdx[self.DETECTED_JOYSTICK_IDX] )
             leftStickUD = self.controller.get_axis( self.leftStickUDIdx[self.DETECTED_JOYSTICK_IDX] )
-            #Display stick position on screen
-            self.textPrint.print("Left Stick:" )
-            self.textPrint.indent()
-            self.textPrint.print("Left/Right: {}".format( leftStickLR ) )
-            self.textPrint.print("Up/Down: {}".format( leftStickUD ) )
-            self.textPrint.unindent()
+
+            if self.displayControllerOutput == True:
+                #Display stick position on screen
+                self.textPrint.print("Left Stick:" )
+                self.textPrint.indent()
+                self.textPrint.print("Left/Right: {}".format( leftStickLR ) )
+                self.textPrint.print("Up/Down: {}".format( leftStickUD ) )
+                self.textPrint.unindent()
             #Call the callback function if defined and stick position has changed since last called
             if (self.leftStickChanged is not None
             and ( self.leftStickLR != leftStickLR or self.leftStickUD != leftStickUD ) ):
@@ -341,12 +346,13 @@ class RobotController:
             #Get stick postitions
             rightStickLR = self.controller.get_axis( self.rightStickLRIdx[self.DETECTED_JOYSTICK_IDX] )
             rightStickUD = self.controller.get_axis( self.rightStickUDIdx[self.DETECTED_JOYSTICK_IDX] )
-            #Display stick position on screen
-            self.textPrint.print("Right Stick:" )
-            self.textPrint.indent()
-            self.textPrint.print("Left/Right: {}".format( rightStickLR ) )
-            self.textPrint.print("Up/Down: {}".format( rightStickUD ) )
-            self.textPrint.unindent()
+            if self.displayControllerOutput == True:
+                #Display stick position on screen
+                self.textPrint.print("Right Stick:" )
+                self.textPrint.indent()
+                self.textPrint.print("Left/Right: {}".format( rightStickLR ) )
+                self.textPrint.print("Up/Down: {}".format( rightStickUD ) )
+                self.textPrint.unindent()
             #Call the callback function if defined and stick position has changed since last called
             if (self.rightStickChanged is not None
             and ( self.rightStickLR != rightStickLR or self.rightStickUD != rightStickUD ) ):
@@ -355,8 +361,9 @@ class RobotController:
                 self.rightStickChanged( self.rightStickLR, self.rightStickUD )
                 
         #Process analogue triggers
-        self.textPrint.print("Front Analogue Triggers:" )
-        self.textPrint.indent()
+        if self.displayControllerOutput == True:
+            self.textPrint.print("Front Analogue Triggers:" )
+            self.textPrint.indent()
         if self.leftTriggerIdx[self.DETECTED_JOYSTICK_IDX] != -1 :
             #Get trigger value
             leftTrigger = self.controller.get_axis( self.leftTriggerIdx[self.DETECTED_JOYSTICK_IDX] )
@@ -366,15 +373,16 @@ class RobotController:
             if self.leftTriggerActivated == False :
                 if leftTrigger != 0.0 :
                     self.leftTriggerActivated = True
-            #Display value on screen
-            self.textPrint.print("Left Trigger: {}".format( leftTrigger ) )
+            if self.displayControllerOutput == True:
+                #Display value on screen
+                self.textPrint.print("Left Trigger: {}".format( leftTrigger ) )
             #Call the callback function if defined and trigger position has changed since last called
             if (self.leftTriggerChanged is not None
             and self.leftTriggerActivated == True
             and self.leftTriggerPos != leftTrigger ):
                 self.leftTriggerPos = leftTrigger
                 self.leftTriggerChanged( self.leftTriggerPos )
-        else:
+        elif self.displayControllerOutput == True:
             self.textPrint.print("No analogue Left Trigger on this controller" )
             
         if self.rightTriggerIdx[self.DETECTED_JOYSTICK_IDX] != -1:
@@ -386,29 +394,31 @@ class RobotController:
             if self.rightTriggerActivated == False :
                 if rightTrigger != 0.0 :
                     self.rightTriggerActivated = True
-            #Display value on screen
-            self.textPrint.print("Right Trigger: {}".format( rightTrigger ) )
+            if self.displayControllerOutput == True:
+                #Display value on screen
+                self.textPrint.print("Right Trigger: {}".format( rightTrigger ) )
+                self.textPrint.unindent()
             #Call the callback function if defined and trigger position has changed since last called
             if (self.rightTriggerChanged is not None
             and self.rightTriggerActivated == True
             and self.rightTriggerPos != rightTrigger ):
                 self.rightTriggerPos = rightTrigger
                 self.rightTriggerChanged( self.rightTriggerPos )
-        else:
+        elif self.displayControllerOutput == True:
             self.textPrint.print("No analogue Right Trigger on this controller" )
-
-        self.textPrint.unindent()
+            self.textPrint.unindent()
         
         #Process Hats
         if self.hatIdx[self.DETECTED_JOYSTICK_IDX] != -1:
             hatState = self.controller.get_hat( self.hatIdx[self.DETECTED_JOYSTICK_IDX] )
             hatLR = hatState[0]
             hatUD = hatState[1]
-            self.textPrint.print("4-way hat:" )
-            self.textPrint.indent()
-            self.textPrint.print("Left/Right: {}".format( hatLR ) )
-            self.textPrint.print("Up/Down: {}".format( hatUD ) )
-            self.textPrint.unindent()
+            if self.displayControllerOutput == True:
+                self.textPrint.print("4-way hat:" )
+                self.textPrint.indent()
+                self.textPrint.print("Left/Right: {}".format( hatLR ) )
+                self.textPrint.print("Up/Down: {}".format( hatUD ) )
+                self.textPrint.unindent()
         elif (self.hatUpIdx[self.DETECTED_JOYSTICK_IDX] != -1
         and   self.hatDownIdx[self.DETECTED_JOYSTICK_IDX] != -1
         and   self.hatLeftIdx[self.DETECTED_JOYSTICK_IDX] != -1
@@ -430,18 +440,19 @@ class RobotController:
                 hatLR = 1
             else:
                 hatLR = 0
-            self.textPrint.print("4-way hat buttons:" )
-            self.textPrint.indent()
-            self.textPrint.print("Left: {}".format( hatLeftBtn ) )
-            self.textPrint.print("Right: {}".format( hatRightBtn ) )
-            self.textPrint.print("Up: {}".format( hatUpBtn ) )
-            self.textPrint.print("Down: {}".format( hatDownBtn ) )
-            self.textPrint.unindent()
-            self.textPrint.print("Converted to Hat values:" )
-            self.textPrint.indent()
-            self.textPrint.print("Left/Right: {}".format( hatLR ) )
-            self.textPrint.print("Up/Down: {}".format( hatUD ) )
-            self.textPrint.unindent()
+            if self.displayControllerOutput == True:
+                self.textPrint.print("4-way hat buttons:" )
+                self.textPrint.indent()
+                self.textPrint.print("Left: {}".format( hatLeftBtn ) )
+                self.textPrint.print("Right: {}".format( hatRightBtn ) )
+                self.textPrint.print("Up: {}".format( hatUpBtn ) )
+                self.textPrint.print("Down: {}".format( hatDownBtn ) )
+                self.textPrint.unindent()
+                self.textPrint.print("Converted to Hat values:" )
+                self.textPrint.indent()
+                self.textPrint.print("Left/Right: {}".format( hatLR ) )
+                self.textPrint.print("Up/Down: {}".format( hatUD ) )
+                self.textPrint.unindent()
                 
         #Update Hat state if any button states changed
         if (self.hatChanged is not None
@@ -451,8 +462,9 @@ class RobotController:
             self.hatChanged( self.hatLRState, self.hatUDState )
         
         #Process buttons
-        self.textPrint.print("Simple buttons:" )
-        self.textPrint.indent()
+        if self.displayControllerOutput == True:
+            self.textPrint.print("Simple buttons:" )
+            self.textPrint.indent()
 
         self.leftBtn1State = self.processButton(
             self.leftBtn1Idx[self.DETECTED_JOYSTICK_IDX],
@@ -501,11 +513,12 @@ class RobotController:
         self.crossXBtnState = self.processButton(
             self.crossXBtnIdx[self.DETECTED_JOYSTICK_IDX],
             "X-Cross Button", self.crossXBtnState, self.crossXBtnChanged)
-        self.textPrint.unindent()
-        
-        #Display any message text set outside the class
-        self.textPrint.print("")
-        self.textPrint.print( self.message )
+
+        if self.displayControllerOutput == True:
+            #Display any message text set outside the class
+            self.textPrint.unindent()
+            self.textPrint.print("")
+            self.textPrint.print( self.message )
         
         # Limit to 20 frames per second
         self.clock.tick(20)
@@ -527,8 +540,9 @@ class RobotController:
         if btnIdx != -1:
             #Get button value
             btnState = self.controller.get_button( btnIdx )
-            #Display value on screen
-            self.textPrint.print(btnName + ": {}".format( btnState ) )
+            if self.displayControllerOutput == True:
+                #Display value on screen
+                self.textPrint.print(btnName + ": {}".format( btnState ) )
             #Call the callback function if defined and button state has changed since last called
             if (btnCallback is not None
             and lastState != btnState ):
