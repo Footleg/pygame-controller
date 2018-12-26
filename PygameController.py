@@ -122,7 +122,8 @@ class RobotController:
                  hatChanged = None,
                  leftStickPressChanged = None, rightStickPressChanged = None,
                  selectBtnChanged = None, homeBtnChanged = None, startBtnChanged = None, triangleBtnChanged = None,
-                 squareBtnChanged = None, circleBtnChanged = None, crossXBtnChanged = None ):
+                 squareBtnChanged = None, circleBtnChanged = None, crossXBtnChanged = None,
+                 mouseDown = None, mouseUp = None):
         """ Robot controller initialisation function. Enables callback functions to be passed
             in for the following events:
             
@@ -189,6 +190,10 @@ class RobotController:
                 
                 crossXBtnChanged: A callback function for the X symbol button (see leftBtn1Changed)
                 
+                mouseDown: A callback function which returns the position of the mouse and the button pressed down 
+                
+                mouseUp: A callback function which returns the position of the mouse and the button released 
+                
         """
         
         #Storereferences to callback functions
@@ -211,6 +216,8 @@ class RobotController:
         self.squareBtnChanged = squareBtnChanged
         self.circleBtnChanged = circleBtnChanged
         self.crossXBtnChanged = crossXBtnChanged
+        self.mouseDown = mouseDown
+        self.mouseUp = mouseUp
         
         #Look for supported game controller
         controllerFound = False
@@ -276,7 +283,7 @@ class RobotController:
                 #Quit pygame as it needs restarting to detect newly paired joysticks
                 pygame.quit()
             else:
-                 break
+                break
         
         #Finished trying to detect game controller             
         if controllerFound == False :
@@ -529,7 +536,10 @@ class RobotController:
         # Check for quit event
         keepRunning = True
         for event in pygame.event.get(): # User did something
-            if event.type == pygame.QUIT: # If user clicked close
+            if ( (event.type == pygame.MOUSEBUTTONDOWN)
+            and (self.mouseDown is not None) ):
+              self.mouseDown( pygame.mouse.get_pos(), event.button )
+            elif event.type == pygame.QUIT: # If user clicked close
                 keepRunning = False # Flag that we are done so we exit this loop
         
         return keepRunning
