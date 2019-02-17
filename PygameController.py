@@ -538,7 +538,7 @@ class RobotController:
         for event in pygame.event.get(): # User did something
             if ( (event.type == pygame.MOUSEBUTTONDOWN)
             and (self.mouseDown is not None) ):
-              self.mouseDown( pygame.mouse.get_pos(), event.button )
+                self.mouseDown( pygame.mouse.get_pos(), event.button )
             elif event.type == pygame.QUIT: # If user clicked close
                 keepRunning = False # Flag that we are done so we exit this loop
         
