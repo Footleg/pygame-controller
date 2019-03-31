@@ -40,43 +40,45 @@ class RobotController:
     SUPPORTED_JOYSTICKS = ("PLAYSTATION(R)3",
                            "Rock Candy Wireless Gamepad for PS3",
                            "hongjingda HJD-X",
-                           "PS3/USB Corded Gamepad")
+                           "PS3/USB Corded Gamepad",
+                           "Wireless Controller")
     DETECTED_JOYSTICK_IDX = -1
     
     #Define specifications of each supported controller
-    AXES = (27,4,6,4)
-    BTNS = (19,13,16,12)
-    HATS = (0,1,1,1)
+    AXES = (27,4,6,4,6)
+    BTNS = (19,13,16,12,13)
+    HATS = (0,1,1,1,1)
     CONTROLLER_DISPLAY_NAMES = ("Sony PS3 Dualshock 6-axis Controller",
                                 "Rock Candy Wireless Gamepad for PS3",
                                 "ThePiHut Wiresless USB Game Controller",
-                                "Argos PS3 Compatible Gamepad")
+                                "Argos PS3 Compatible Gamepad",
+                                "Sony PS4 Wireless Controller")
     
     #Define indices for each control for the different supported controllers
-    leftTriggerIdx = (12,-1,4,-1)
-    rightTriggerIdx = (13,-1,5,-1)
-    leftStickLRIdx = (0,0,0,0)
-    leftStickUDIdx = (1,1,1,1)
-    rightStickLRIdx = (2,2,2,2)
-    rightStickUDIdx = (3,3,3,3)
-    leftBtn1Idx = (10,4,6,4)
-    rightBtn1Idx = (11,5,7,5)
-    leftBtn2Idx = (8,6,8,6)
-    rightBtn2Idx = (9,7,9,7)
-    hatLeftIdx = (7,-1,-1,-1)
-    hatRightIdx = (5,-1,-1,-1)
-    hatUpIdx = (4,-1,-1,-1)
-    hatDownIdx = (6,-1,-1,-1)
-    hatIdx = (-1,0,0,0)
-    leftStickPressIdx = (1,10,13,10)
-    rightStickPressIdx = (2,11,14,11)
-    selectBtnIdx = (0,8,10,8)
-    homeBtnIdx = (16,12,12,-1)
-    startBtnIdx = (3,9,11,9)
-    triangleBtnIdx = (12,3,4,0)
-    squareBtnIdx = (15,0,3,3)
-    circleBtnIdx = (13,2,1,1)
-    crossXBtnIdx = (14,1,0,2)
+    leftTriggerIdx = (12,-1,4,-1,2)
+    rightTriggerIdx = (13,-1,5,-1,5)
+    leftStickLRIdx = (0,0,0,0,0)
+    leftStickUDIdx = (1,1,1,1,1)
+    rightStickLRIdx = (2,2,2,2,3)
+    rightStickUDIdx = (3,3,3,3,4)
+    leftBtn1Idx = (10,4,6,4,4)
+    rightBtn1Idx = (11,5,7,5,5)
+    leftBtn2Idx = (8,6,8,6,6)
+    rightBtn2Idx = (9,7,9,7,7)
+    hatLeftIdx = (7,-1,-1,-1,-1)
+    hatRightIdx = (5,-1,-1,-1,-1)
+    hatUpIdx = (4,-1,-1,-1,-1)
+    hatDownIdx = (6,-1,-1,-1,-1)
+    hatIdx = (-1,0,0,0,0)
+    leftStickPressIdx = (1,10,13,10,11)
+    rightStickPressIdx = (2,11,14,11,12)
+    selectBtnIdx = (0,8,10,8,9)
+    homeBtnIdx = (16,12,12,-1,10)
+    startBtnIdx = (3,9,11,9,8)
+    triangleBtnIdx = (12,3,4,0,2)
+    squareBtnIdx = (15,0,3,3,3)
+    circleBtnIdx = (13,2,1,1,1)
+    crossXBtnIdx = (14,1,0,2,0)
     
     #Properties holding program status or controlling behaviour
     initialised = False
