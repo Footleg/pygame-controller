@@ -46,7 +46,7 @@ class RobotController:
     
     #Define specifications of each supported controller
     AXES = (27,4,6,4,6)
-    BTNS = (19,13,16,12,13)
+    BTNS = (19,13,15,12,13)
     HATS = (0,1,1,1,1)
     CONTROLLER_DISPLAY_NAMES = ("Sony PS3 Dualshock 6-axis Controller",
                                 "Rock Candy Wireless Gamepad for PS3",
@@ -260,7 +260,7 @@ class RobotController:
                             hats = joystick.get_numhats()
                             if hats == self.HATS[self.DETECTED_JOYSTICK_IDX] :
                                 btns = joystick.get_numbuttons()
-                                if btns == self.BTNS[self.DETECTED_JOYSTICK_IDX] :
+                                if btns >= self.BTNS[self.DETECTED_JOYSTICK_IDX] :
                                     #Set up this controller
                                     self.controller = joystick
                                     controllerFound = True
@@ -269,7 +269,7 @@ class RobotController:
                                     self.initStatus(0)
                                     break
                                 else:
-                                    print("Joystick has {} buttons. Expected {}.".format( btns,self.BTNS[self.DETECTED_JOYSTICK_IDX] ) )
+                                    print("Joystick has {} buttons. Expected at least {}.".format( btns,self.BTNS[self.DETECTED_JOYSTICK_IDX] ) )
                             else:
                                 print("Joystick has {} hats. Expected {}.".format( hats,self.HATS[self.DETECTED_JOYSTICK_IDX] ) )
                         else:
