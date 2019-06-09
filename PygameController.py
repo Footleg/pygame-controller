@@ -295,7 +295,7 @@ class RobotController:
             #Complete class set up
             
             # Set the width and height of the screen [width,height]
-            size = [400, 700]
+            size = [400, 500]
             self.screen = pygame.display.set_mode(size)
 
             pygame.display.set_caption(title)

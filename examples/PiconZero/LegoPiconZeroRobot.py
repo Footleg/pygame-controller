@@ -37,33 +37,22 @@ def initStatus(status):
             pz.setOutput (servo_no, 85)
             
 
-def leftStickChangeHandler(valLR, valUD):
-    """Handler function for left analogue stick"""
+def powerStickChangeHandler(valLR, valUD):
+    """Handler function for right analogue stick"""
+    global speed
+    speed = int(valUD * -100)
+    if speed < 0 :
+        pz.forward(-speed)
+    else:
+        pz.reverse(speed)
 
+
+
+def steeringStickChangeHandler(valLR, valUD):
     global steering
     steering = int(right_limit - ( (valLR + 1) * (right_limit - left_limit) / 2 ) )
     pz.setOutput (servo_no, steering)
-
-
-def rightStickChangeHandler(valLR, valUD):
-    """Handler function for right analogue stick"""
-
-    global speed
-    newSpeed = int( -valUD * 100 * speedFactor)
-    if newSpeed > 100 :
-        newSpeed = 100
-    elif newSpeed < -100 :
-        newSpeed = -100
-    elif abs(newSpeed) < minMovingSpeed :
-        #Set power level to zero below minimum level at which car actally moves
-        newSpeed = 0
-
-    speed = newSpeed
-    if speed > 0 :
-        pz.forward(speed)
-    else:
-        pz.reverse(-speed)
-
+    
 
 def main():
     
@@ -89,9 +78,9 @@ def main():
     #Run in try..finally structure so that program exits gracefully on hitting any
     #errors in the callback functions
     try:
-        cnt = RobotController("Lego Picon Zero Robot", initStatus,
-                              leftStickChanged = leftStickChangeHandler,
-                              rightStickChanged = rightStickChangeHandler)
+        cnt = RobotController("Lego Picon Zero Robot", initStatus ,
+                              leftStickChanged = powerStickChangeHandler,
+                              rightStickChanged = steeringStickChangeHandler)
         
         if cnt.initialised :
             keepRunning = True
