@@ -2,7 +2,7 @@
 
 import sys
 sys.path.append('./../../')
-sys.path.append('/home/pi/piconzero/')
+sys.path.append('/home/pi/4tronix/piconzero/')
 
 import pygame, random, time, math
 from PygameController import RobotController
