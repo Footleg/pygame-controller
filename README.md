@@ -1,6 +1,22 @@
 # Pygame Controller
 This project is designed to make it simple to add game controllers to python programs for controlling attached hardware. It consists of a class which maps game controllers to your own code functions and some examples and a template file to help you get started. The original design was created to assist controlling Raspberry Pi based robots using game controllers so that people learning python on Raspberry Pi computers could easily get started in mapping the joysticks, triggers and buttons on a game controller to motors, servos and lights. It has since been proven as a controller library in the prestigious Pi Wars robot competition to produce a remote controlled robot with a full GUI (see my [Pi Wars 2019](https://github.com/Footleg/PiWars2019) github repository for details).
 
+## Installation
+To install this library, first clone this git repo to your Raspberry Pi:
+```bash
+git clone https://github.com/footleg/pygame-controller
+```
+Now build the library package:
+```bash
+cd pygame-controller
+sudo python3 setup.py install
+```
+Finally install the package into your Python3 environment:
+```bash
+sudo pip3 install .
+```
+
+## Controller Support
 This project currently supports the following controllers:
 * Sony PS3 Dualshock Wireless controller
 * Sony PS4 Wireless Controller
@@ -8,6 +24,7 @@ This project currently supports the following controllers:
 * Rock Candy wireless USB game controller
 * Generic wireless USB game controller from Argos
 
+## Usage and Examples
 There are some common problems in interfacing code to game controllers as inputs which Pygame Controller provides solutions to. 
 * Different models of game controller send different information for the same controls. One might map the home button to button number 16 in the array of detected buttons, while another might map it to number 12. Pygame Controller enables the same code to respond to the user pressing a particular button, trigger or joystick regardless of which of the supported controllers is connected.
 * It is not always efficient to continually update outputs from your program to control hardware when there has been no change in the state of the control position which is mapped to that output. Pygame Controller only calls your code functions when the value of the control mapped to that code actually changes. e.g. If a button is pressed and held down then the code linked to that button will only be called once when the button is pressed, and not continually called in a loop. The code linked to the control will only be called again when the button is released.
