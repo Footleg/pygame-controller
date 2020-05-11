@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-
+""" A more complex tank steering robot with two motors for left and right tracks.
+    This robot uses the PiconZero pHAT board from 4tronix and the steering and
+    speed are both controlled from a single stick. A Blinkt is also used for
+    status feedback. There is also an ultrasonic range finder attached to the
+    PiconZero board header.
+"""
 import sys
-sys.path.append('./../../')
 sys.path.append('./../Blinkt/')
 sys.path.append('/home/pi/piconzero/')
 
 import pygame, random, time, math
 import blinkt as blkt
-from PygameController import RobotController
+from pygamecontroller import RobotController
 from BlinktController import initStatus, showIP
 import piconzero3 as pz
 import hcsr04_bcm as hcsr04

@@ -1,16 +1,19 @@
 #!/usr/bin/python
 
-from Adafruit_PWM_Servo_Driver import PWM
+from board import SCL, SDA
+import busio
+from adafruit_pca9685 import PCA9685
 import time
 
+# Initialise the i2c bus to communicate with devices
+i2c = busio.I2C(SCL, SDA)
+
 # Initialise the PWM device using the default address
-pwm = PWM(0x40)
-# Note if you'd like more debug output you can instead run:
-#pwm = PWM(0x40, debug=True)
+pwm = PCA9685(i2c)
     
-# Set frequency to 50 Hz (60 Hz is alternative)
-freq = 50
-pwm.setPWMFreq(freq)                        
+# Set frequency of PWM pulses (default is 50 Hz)
+freqPWM = 50
+pwm.frequency = freqPWM                        
 
 #Define the channels which the servos are connected to
 turnChannel = 0
@@ -44,7 +47,8 @@ def setServoPosition(channel, position):
         print("Calculated servo pulse {} is outside supported range of {} to {}".format(pulse,servoMin,servoMax) )
     else:
         # print("Setting servo {} pulse to {}".format(channel,pulse) )
-        pwm.setPWM(channel, 0, pulse)
+        active_channel = pwm.channels[channel]
+        active_channel.duty_cycle = pulse
     
     
 def setArmPosition(channel, position):

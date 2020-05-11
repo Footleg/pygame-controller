@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-
+""" Example of a robot using a single motor to power the rear wheels, and a servo to steer
+    the front wheels. This robot uses the PiconZero pHAT board from 4tronix.
+"""
 import sys
-sys.path.append('./../../')
 sys.path.append('/home/pi/4tronix/piconzero/')
 
 import pygame, random, time, math
-from PygameController import RobotController
+from pygamecontroller import RobotController
 import piconzero3 as pz
 
 #Initialise lobal variables

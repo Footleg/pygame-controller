@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-
-import sys
-sys.path.append('./../../')
-
+""" Example using a game controller to control the LEDs on a Pimoroni Blinkt
+    LED array. The Blinkt LEDs are also used to indicate status during
+    initialisation while waiting for a controller to be paired.
+"""
 import pygame, subprocess
 from time import sleep
 import blinkt as blkt
 import random
-from PygameController import RobotController
+from pygamecontroller import RobotController
 
 
 def randomColour(pixelIndex):
@@ -36,13 +36,18 @@ def colourBar(controllerValue,colR,colG,colB,reverse):
 
     
 def showDigit(digit):
+    """ Display digits using the Blinkt LEDs. For 0-8 light up
+        the corresponding number of LEDs from the left hand end
+        green against a blue background (so 0 = all blue).
+        For 9, light up just the right hand end LED green.
+    """
     if digit < 9:
         blkt.set_all(0,0,255)
         for i in range(digit):
             blkt.set_pixel(i,0,255,0)
     elif digit == 9:
         blkt.set_all(0,255,0)
-        for i in range(2,6):
+        for i in range(0,7):
             blkt.set_pixel(i,0,0,255)
     else:
         blkt.set_all(255,0,0)
@@ -51,7 +56,8 @@ def showDigit(digit):
     
 
 def showIP():
-    #Show IP address
+    """ Show IP address on the Blinkt
+    """
     ip = subprocess.getoutput("hostname -I")
     for i in range(len(ip)):
         chr = ip[i]
@@ -64,6 +70,7 @@ def showIP():
         elif ord(chr) == 32:
             blkt.clear()
             blkt.show()
+            break #Stop on first space character 
         else:
             blkt.set_all(0,255,255)
             blkt.show()

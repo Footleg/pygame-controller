@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
-
 """
     Example driving twin motors for skid steering using the Rocky Rover HAT.
+    This is an early prototype testing the HAT before the code module for this
+    hardware board I am developing has been completed. This will be updated
+    when the software for my new board is completed.
 """
-
-#Add folder containing PygameController module to the system path
-#(only needed if PygameController is in a different folder to your program)
-import sys
-sys.path.append('./../../')
-
-#Import the modules your code uses. These have to include pygame and the
-#PygameController module
 import pygame
-from PygameController import RobotController
+from pygamecontroller import RobotController
 import RockyRoverHAT as rh
 
 #Initialise global variables

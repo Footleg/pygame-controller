@@ -1,0 +1,3 @@
+0.1.0
+-----
+Initial packaged release to PyPi to test packaging (my first published package).

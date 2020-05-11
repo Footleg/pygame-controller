@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-
+""" Example of a robot using tank steering with two motors for left and right tracks.
+    This robot uses the PiconZero pHAT board from 4tronix and the steering and speed
+    are both controlled from a single stick, so the motor powers can be directly updated
+    in the change handler method. (See the RobotHAT Simple Twin Motor example for an
+    alternative way to control a robot with separate sticks for power and steering).
+"""
 import sys
-sys.path.append('./../../')
 sys.path.append('/home/pi/4tronix/piconzero/')
 
 import pygame, random, time, math
-from PygameController import RobotController
+from pygamecontroller import RobotController
 import piconzero3 as pz
 
 #Initialise lobal variables
@@ -27,14 +31,6 @@ def initStatus(status):
             
 
 def leftStickChangeHandler(valLR, valUD):
-    """Handler function for left analogue stick"""
-
-    global steering
-    steering = int(right_limit - ( (valLR + 1) * (right_limit - left_limit) / 2 ) )
-    pz.setOutput (servo_no, steering)
-
-
-def leftStickChangeHandlerV2(valLR, valUD):
     """Handler function for left analogue stick"""
     mode = "Drive: "
     
@@ -85,7 +81,7 @@ def main():
     #errors in the callback functions
     try:
         cnt = RobotController("Lego Picon Zero Robot", initStatus,
-                              leftStickChanged = leftStickChangeHandlerV2)
+                              leftStickChanged = leftStickChangeHandler)
         
         if cnt.initialised :
             keepRunning = True

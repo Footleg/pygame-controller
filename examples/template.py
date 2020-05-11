@@ -1,21 +1,17 @@
 #!/usr/bin/env python3
 
 """ The program provides a template to start developing your program from. It contains the
-    basic structure of a program using the PygameController module with an example of each
+    basic structure of a program using the pygamecontroller module with an example of each
     type of call back handler function. It contains details comments explaining each part
     of the program to make it as clear as possible how to use it as the base for your own
     applications.
 """
 
-#Add folder containing PygameController module to the system path
-#(only needed if PygameController is in a different folder to your program)
-import sys
-sys.path.append('./../')
 
 #Import the modules your code uses. These have to include pygame and the
-#PygameController module
+#pygamecontroller module RobotController class
 import pygame
-from PygameController import RobotController
+from pygamecontroller import RobotController
 
 
 #The controller program needs an initialisation status callback function to send status codes

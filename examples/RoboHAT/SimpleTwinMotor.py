@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-
+""" Example of a robot using tank steering with two motors for left and right tracks.
+    This robot uses the RoboHAT board from 4tronix. The speed and steering are
+    controlled from the left and right sticks respectively, so in this example the
+    change handler functions store the stick postions in variables and these are
+    used to update the motor powers in the main program loop. (See the PiconZero
+    Simple Twin Motor example for an alternative way to control a robot with just a
+    single stick for both power and steering).
+"""
 import sys
-sys.path.append('./../../')
 sys.path.append('/home/pi/4tronix/robohat')
 
 import pygame, random, time, math
-from PygameController import RobotController
+from pygamecontroller import RobotController
 import robohat
 
 #Initialise global variables

@@ -1,10 +1,17 @@
 #!/usr/bin/python
-
-import sys
-sys.path.append('./../../')
-
-from PygameController import RobotController
+""" This example uses the Adafruit 16-Channel 12-bit PWM/Servo HAT to control a
+    Mime Industries MeArm (a low cost robot arm kit). The servo positions are
+    controlled using a game controller and the code limits the range of the servos
+    to prevent them trying to move beyond positions the robot arm constrains them to.
+    
+    The Adafruit HAT is controlled using the Blinka library and circuit python
+    adafruit_pca9685 module. These dependencies can be installed/upgraded using
+    the following installation command:
+    
+    pip3 install --upgrade RPI.GPIO adafruit_blinka adafruit-circuitpython-pca9685
+"""
 import pygame
+from pygamecontroller import RobotController
 import MeArmServoControl as arm
 
 
