@@ -2,16 +2,23 @@
 This project is designed to make it simple to add game controllers to python programs for controlling attached hardware. It consists of a class which maps game controllers to your own code functions and some examples and a template file to help you get started. The original design was created to assist controlling Raspberry Pi based robots using game controllers so that people learning python on Raspberry Pi computers could easily get started in mapping the joysticks, triggers and buttons on a game controller to motors, servos and lights. It has since been proven as a controller library in the prestigious Pi Wars robot competition to produce a remote controlled robot with a full GUI (see my [Pi Wars 2019](https://github.com/Footleg/PiWars2019) github repository for details).
 
 ## Installation
-To install this library, first clone this git repo to your Raspberry Pi:
+Pygame Controller is now available on PyPi. So you can install or upgrade the package using pip:
+```bash
+pip3 install --upgrade pygame-controller
+```
+To deploy the examples, clone this git repo to your Raspberry Pi:
 ```bash
 git clone https://github.com/footleg/pygame-controller
 ```
-Now build the library package:
+### Install from source
+If you just want the latest stable release, then you can use pip3 as detailed above.
+If you want to build the latest source, or build from another branch, you can build 
+the library package using setup tools:
 ```bash
-cd pygame-controller
+cd pygame-controller/library
 sudo python3 setup.py install
 ```
-Finally install the package into your Python3 environment:
+Then install the locally built package into your Python3 environment:
 ```bash
 sudo pip3 install .
 ```
