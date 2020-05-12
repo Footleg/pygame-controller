@@ -31,10 +31,83 @@ class TextPrint:
     
 
 class RobotController:
-    """Provides a Pygame based application to detect controller input
-       and interface the controller to your own code.
+    """ Provides a Pygame based application to detect controller input
+        and interface the controller to your own code.
+        
+        The constructor takes optional callback functions to be passed
+        in which will be called by the RobotController when any buttons,
+        control stick or triggers are activated on the game controller.
+        Callback functions can also be passed in for mouse events, enabling
+        touch screen interfaces to be implemented.
+        
+        Args:
+            title: Will be displayed on the application window title bar
+            
+            initStatus: A callback function which will be passed integer status values
+                during initialisation of the application. The function given as this argument
+                will be called while the application is detecting a supported game controller.
+                A status code of 0 indicates a controller was successfully detected.
+                Status codes in the range 1 - 32 indicate attempts to detect a controller. While
+                these values are being returned, the application is waiting for a controller to
+                be connected (via cable or bluetooth). The status value indicates how many
+                attempts have been made. After 32 attempts if no supported controller has been
+                detected then the application will return the status code -1, and then exit.
+            
+            leftTriggerChanged: A callback function which will be passed the position value of
+                the left analogue trigger. This function will only be called when the trigger
+                value changes, so your application code will only be called when something needs
+                to be updated.
+            
+            rightTriggerChanged: A callback function for the right trigger (see leftTriggerChanged)
 
-    """
+            leftStickChanged: A callback function which will be passed the position value of
+                the left analogue stick as pair of floats consisting the left/right position and up/down
+                positions of the stick. This function will only be called when the stick
+                position changes, so your application code will only be called when something needs
+                to be updated.
+            
+            rightStickChanged: A callback function for the right stick (see leftStickChanged)
+            
+            leftBtn1Changed: A callback function which is called when the state of the left front button 1
+                on the controller changes. It will be passed an integer value indicating whether the button
+                is pressed (1) or released (0)
+            
+            rightBtn1Changed: A callback function for the right front button 1 (see leftBtn1Changed)
+            
+            leftBtn2Changed: A callback function for the left front button 2 (see leftBtn1Changed)
+            
+            rightBtn2Changed: A callback function for the right front button 2 (see leftBtn1Changed)
+            
+            hatChanged: A callback function which will be passed the states of the buttons on
+                the 4-way hat as a pair of integers representing the Left/Right and Up/Down states of the
+                hat buttons. The Left/Right state = -1 for left, 0 for centre and 1 for right. The Up/Down
+                state = 1 for up, 0 for centre and -1 for down. This function will only be called when the 
+                hat state changes, so your application code will only be called when something needs
+                to be updated.
+            
+            leftStickPressChanged: A callback function for the left stick pressed state (see leftBtn1Changed)
+            
+            rightStickPressChanged: A callback function for the right stick pressed state (see leftBtn1Changed)
+            
+            selectBtnChanged: A callback function for the Select button (see leftBtn1Changed)
+            
+            homeBtnChanged: A callback function for the Home button (see leftBtn1Changed)
+            
+            startBtnChanged: A callback function for the Start button (see leftBtn1Changed)
+            
+            triangleBtnChanged: A callback function for the triangle symbol button (see leftBtn1Changed)
+            
+            squareBtnChanged: A callback function for the square symbol button (see leftBtn1Changed)
+            
+            circleBtnChanged: A callback function for the circle symbol button (see leftBtn1Changed)
+            
+            crossXBtnChanged: A callback function for the X symbol button (see leftBtn1Changed)
+            
+            mouseDown: A callback function which returns the position of the mouse and the button pressed down 
+            
+            mouseUp: A callback function which returns the position of the mouse and the button released 
+                
+        """
     
     #Data for supported controllers
     SUPPORTED_JOYSTICKS = ("PLAYSTATION(R)3",
@@ -126,77 +199,6 @@ class RobotController:
                  selectBtnChanged = None, homeBtnChanged = None, startBtnChanged = None, triangleBtnChanged = None,
                  squareBtnChanged = None, circleBtnChanged = None, crossXBtnChanged = None,
                  mouseDown = None, mouseUp = None):
-        """ Robot controller initialisation function. Enables callback functions to be passed
-            in for the following events:
-            
-            Args:
-                title: The text to be displayed on the application window title bar
-                
-                initStatus: A callback function which will be passed integer status values
-                    during initialisation of the application. The function given as this argument
-                    will be called while the application is detecting a supported game controller.
-                    A status code of 0 indicates a controller was successfully detected.
-                    Status codes in the range 1 - 32 indicate attempts to detect a controller. While
-                    these values are being returned, the application is waiting for a controller to
-                    be connected (via cable or bluetooth). The status value indicates how many
-                    attempts have been made. After 32 attempts if no supported controller has been
-                    detected then the application will return the status code -1, and then exit.
-                
-                leftTriggerChanged: A callback function which will be passed the position value of
-                    the left analogue trigger. This function will only be called when the trigger
-                    value changes, so your application code will only be called when something needs
-                    to be updated.
-                
-                rightTriggerChanged: A callback function for the right trigger (see leftTriggerChanged)
-
-                leftStickChanged: A callback function which will be passed the position value of
-                    the left analogue stick as pair of floats consisting the left/right position and up/down
-                    positions of the stick. This function will only be called when the stick
-                    position changes, so your application code will only be called when something needs
-                    to be updated.
-                
-                rightStickChanged: A callback function for the right stick (see leftStickChanged)
-                
-                leftBtn1Changed: A callback function which is called when the state of the left front button 1
-                    on the controller changes. It will be passed an integer value indicating whether the button
-                    is pressed (1) or released (0)
-                
-                rightBtn1Changed: A callback function for the right front button 1 (see leftBtn1Changed)
-                
-                leftBtn2Changed: A callback function for the left front button 2 (see leftBtn1Changed)
-                
-                rightBtn2Changed: A callback function for the right front button 2 (see leftBtn1Changed)
-                
-                hatChanged: A callback function which will be passed the states of the buttons on
-                    the 4-way hat as a pair of integers representing the Left/Right and Up/Down states of the
-                    hat buttons. The Left/Right state = -1 for left, 0 for centre and 1 for right. The Up/Down
-                    state = 1 for up, 0 for centre and -1 for down. This function will only be called when the 
-                    hat state changes, so your application code will only be called when something needs
-                    to be updated.
-                
-                leftStickPressChanged: A callback function for the left stick pressed state (see leftBtn1Changed)
-                
-                rightStickPressChanged: A callback function for the right stick pressed state (see leftBtn1Changed)
-                
-                selectBtnChanged: A callback function for the Select button (see leftBtn1Changed)
-                
-                homeBtnChanged: A callback function for the Home button (see leftBtn1Changed)
-                
-                startBtnChanged: A callback function for the Start button (see leftBtn1Changed)
-                
-                triangleBtnChanged: A callback function for the triangle symbol button (see leftBtn1Changed)
-                
-                squareBtnChanged: A callback function for the square symbol button (see leftBtn1Changed)
-                
-                circleBtnChanged: A callback function for the circle symbol button (see leftBtn1Changed)
-                
-                crossXBtnChanged: A callback function for the X symbol button (see leftBtn1Changed)
-                
-                mouseDown: A callback function which returns the position of the mouse and the button pressed down 
-                
-                mouseUp: A callback function which returns the position of the mouse and the button released 
-                
-        """
         
         #Storereferences to callback functions
         self.initStatus = initStatus
