@@ -16,13 +16,8 @@ If you want to build the latest source, or build from another branch, you can bu
 the library package using setup tools:
 ```bash
 cd pygame-controller/library
-sudo python3 setup.py install
+python3 setup.py install
 ```
-Then install the locally built package into your Python3 environment:
-```bash
-sudo pip3 install .
-```
-
 ## Controller Support
 This project currently supports the following controllers:
 * Sony PS3 Dualshock Wireless controller
