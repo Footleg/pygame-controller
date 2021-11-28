@@ -16,27 +16,32 @@ import blinkt
 #Initialise global variables
 power = 0
 turn = 0
-minMovingSpeed = 30
+minMovingSpeed = 10 #Set to the lowest percentage of motor power needed to turn the motors
 message = ""
-# Sets amount right stick position is divided by to make turns less twitchy
-defaultStickTurnDampening = 1.5
-stickTurnDampening = defaultStickTurnDampening
+battPowerColour = (0,255,255) # This will get updated to colour indicating battery level
+ledPos = 0 #Position of LED scanning cursor used for animation
+ledDir = 1 #Direction LED scanning cursor is moving
 
-#Multiplier applied to speed so top speed is set when stick is not quite at maximum position
-speedFactor = 1.0
+# Sets amount speed is divided by to make turns less twitchy
+defaultSpeedDampening = 1.3 #1=full batt. voltage, 2=half max speed
+slowModeSpeedDampening = 3 #2=half speed, 3=third max speed
+speedDampening = defaultSpeedDampening
 
 sb = sentinelboard.SentinelBoard()
 
-sb.voltage_multiplier = 0.606
-print(f"Motor supply voltage: {sb.motor_voltage:.2f}")
+sb.sbHardware.voltage_multiplier = 0.606
+print(f"Motor supply voltage: {sb.sbHardware.motor_voltage:.2f}")
 
 def showBatteryStatus(v=0):
+    global battPowerColour
+
+    #Show battery level when using default speed
     # Display charge level
     BATT_MIN = 6.5
     BATT_MAX = 8.0
     battery_voltage = v
     if v == 0 :
-        battery_voltage = sb.motor_voltage
+        battery_voltage = sb.sbHardware.motor_voltage
     batt_percent = 100 * (battery_voltage - BATT_MIN) / (BATT_MAX - BATT_MIN)
     if batt_percent > 100:
         batt_percent = 100
@@ -44,9 +49,8 @@ def showBatteryStatus(v=0):
         batt_percent = 0
     r = int(120 - 1.2 * batt_percent)
     g = int(batt_percent)
-    blinkt.set_all(r, g, 0) # Set all LEDs to show charge via colour
-    blinkt.show()
-    print(f"Motor supply voltage: {battery_voltage:.2f}")
+    battPowerColour = (r, g, 0)
+    print(f"Motor supply voltage: {battery_voltage:.2f} Colour: {battPowerColour}")
 
 def motorSpeed(ls,rs):
     global message
@@ -142,33 +146,33 @@ def rightTrigChangeHandler(val):
 def leftStickChangeHandler(valLR, valUD):
     """Handler function for left analogue stick"""
     global power
-    power = valUD/stickTurnDampening
+    power = valUD/speedDampening
 
 
 def rightStickChangeHandler(valLR, valUD):
     """Handler function for right analogue stick"""
     global turn
-    turn = valLR/stickTurnDampening
+    turn = valLR/speedDampening
 
 
 def leftFrontBtn1Handler(val):
-    global stickTurnDampening
+    global speedDampening
     if val == 1 :
-        stickTurnDampening = 2 # Slow mode
+        speedDampening = slowModeSpeedDampening # Slow mode
     else :
-        stickTurnDampening = defaultStickTurnDampening
+        speedDampening = defaultSpeedDampening
 
 
 def rightFrontBtn1Handler(val):
-    global stickTurnDampening
+    global speedDampening
     if val == 1 :
-        stickTurnDampening = 1 # Fast mode
+        speedDampening = 1 # Fast mode (full speed)
     else :
-        stickTurnDampening = defaultStickTurnDampening
+        speedDampening = defaultSpeedDampening
 
 
 def main():
-    global message
+    global message, ledPos, ledDir
     ## Check that required hardware is connected ##
 
     #Initialise the controller board
@@ -195,13 +199,18 @@ def main():
         else :
             keepRunning = False
 
-        # -------- Main Program Loop -----------
         battReadInterval = 0
         battReadCounter = 0
         battV = 0
+        led1 = 2 #Brightness multiple for LED 1
+        led2 = 1 #Brightness multiple for LED 2
+        led3 = 0.5 #Brightness multiple for LED 3
+        ledUpdateInterval = 0
+        ledColour = battPowerColour
+
+        # -------- Main Program Loop -----------
         while keepRunning == True :
             cnt.message = message
-
 
             # Trigger stick events and check for quit
             keepRunning = cnt.controllerStatus()
@@ -209,11 +218,38 @@ def main():
             message = "Power={0:.2f}, Turn={1:.2f}".format(power,turn)
             motorSpeed(power, turn)
 
+            #Update LED animation
+            ledUpdateInterval += 1
+            if ledUpdateInterval > 1:
+                if speedDampening == defaultSpeedDampening:
+                    ledColour = battPowerColour
+                elif speedDampening == slowModeSpeedDampening:
+                    ledColour = (0, 0, 100) # Show blue for slow (fine control) mode
+                else:
+                    ledColour = (100, 0, 0) # Show red for full power (turbo) mode
+                ledUpdateInterval = 0
+                blinkt.clear()
+                blinkt.set_pixel(ledPos,ledColour[0]*led1,ledColour[1]*led1,ledColour[2]*led1)
+                ledPos2 = ledPos-ledDir
+                if -1 < ledPos2 < 8:
+                    blinkt.set_pixel(ledPos2,ledColour[0]*led2,ledColour[1]*led2,ledColour[2]*led2)
+                ledPos3 = ledPos2-ledDir
+                if -1 < ledPos3 < 8:
+                    blinkt.set_pixel(ledPos3,ledColour[0]*led3,ledColour[1]*led3,ledColour[2]*led3)
+                blinkt.show()
+                ledPos += ledDir
+                if ledPos > 7:
+                    ledDir = -1
+                    ledPos = 7
+                elif ledPos < 0:
+                    ledDir = 1
+                    ledPos = 0
+
             # Read battery voltage no more often than 20 cycles and only when motors are off
-            battReadInterval = battReadInterval + 1
+            battReadInterval += 1
             if (battReadInterval > 20) and (power == 0) and (turn == 0):
                 # Add battery voltage to variable to average after 10 readings
-                battV = battV + sb.motor_voltage
+                battV = battV + sb.sbHardware.motor_voltage
                 battReadInterval = 0 # Reset so another read will happen in 20 cycles
                 battReadCounter = battReadCounter + 1
                 # Update voltage indicator with average voltage reading every 10 reads
@@ -224,7 +260,9 @@ def main():
 
     finally:
         #Clean up and turn off Blinkt LEDs
-        sb.allOff()
+        sb.sbHardware.allOff()
+        blinkt.clear()
+        blinkt.show()
         pygame.quit()
 
 
