@@ -29,7 +29,7 @@ speedDampening = defaultSpeedDampening
 
 sb = sentinelboard.SentinelBoard()
 
-sb.sbHardware.voltage_multiplier = 0.606
+sb.sbHardware.voltage_multiplier = 1.136
 print(f"Motor supply voltage: {sb.sbHardware.motor_voltage:.2f}")
 
 def showBatteryStatus(v=0):
@@ -214,6 +214,9 @@ def main():
 
             # Trigger stick events and check for quit
             keepRunning = cnt.controllerStatus()
+
+            # Send pulse to watchdog to keep motors alive
+            sb.pulseWatchdog()
 
             message = "Power={0:.2f}, Turn={1:.2f}".format(power,turn)
             motorSpeed(power, turn)
