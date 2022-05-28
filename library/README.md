@@ -1,10 +1,11 @@
 # Pygame Controller
-This project is designed to make it simple to add game controllers to python programs for controlling attached hardware. It consists of a class which maps game controllers to your own code functions and some examples and a template file to help you get started. The original design was created to assist controlling Raspberry Pi based robots using game controllers so that people learning python on Raspberry Pi computers could easily get started in mapping the joysticks, triggers and buttons on a game controller to motors, servos and lights. 
+This project is designed to make it simple to add game controllers to python programs for controlling attached hardware. It consists of a class which maps game controllers to your own code functions and some examples and a template file to help you get started. The original design was created to assist controlling Raspberry Pi based robots using game controllers so that people learning python on Raspberry Pi computers could easily get started in mapping the joysticks, triggers and buttons on a game controller to motors, servos and lights. You can extend the interface to use the full capabilities of Pygame to display information and even program interaction via touch screens. You can find an example of a full graphical UI with menus and status display using a Pimoroni Hyperpixel Touch display in my [Pi Wars 2019](https://github.com/Footleg/PiWars2019) repo.
 
 ## Controller Support
 This project currently supports the following controllers:
 * Sony PS3 Dualshock Wireless controller
-* Sony PS4 Wireless Controller
+* Sony PS4 Wireless controller (and compatibles)
+* 8BitDo Pro 2 controller
 * The Pi Hut wireless USB game controller
 * Rock Candy wireless USB game controller
 * Generic wireless USB game controller from Argos

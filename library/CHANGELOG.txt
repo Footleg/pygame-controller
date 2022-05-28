@@ -1,3 +1,7 @@
 0.1.0
 -----
 Initial packaged release to PyPi to test packaging (my first published package).
+
+0.2.0
+-----
+Added support for the 8BitDo Pro 2 wireless bluetooth controller.
