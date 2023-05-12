@@ -15,8 +15,8 @@ If you just want the latest stable release, then you can use pip3 as detailed ab
 If you want to build the latest source, or build from another branch, you can build 
 the library package using setup tools:
 ```bash
-cd pygame-controller/library
-python3 setup.py install
+cd pygame-controller
+sudo python3 setup.py install
 ```
 ## Controller Support
 This project currently supports the following controllers:
