@@ -109,59 +109,345 @@ class RobotController:
                 
         """
     
-    #Data for supported controllers
+    # Names for supported controllers. These are the names the controllers present themselves as.
     SUPPORTED_JOYSTICKS = ("PLAYSTATION(R)3",
                            "Rock Candy Wireless Gamepad for PS3",
                            "hongjingda HJD-X",
                            "PS3/USB Corded Gamepad",
                            "Wireless Controller",
-                           "8BitDo Pro 2")
+                           "8BitDo Pro 2",
+                           "Xbox One S",
+                           "Pro Controller")
     DETECTED_JOYSTICK_IDX = -1
     
     #Define specifications of each supported controller
-    AXES = (27,4,6,4,6,6)
-    BTNS = (19,13,15,12,13,10)
-    HATS = (0,1,1,1,1,1)
+    AXES = (
+        27, # PS3 Dualshock
+        4,  # Rock Candy USB Dongle
+        6,  # Pi Hut USB Dongle
+        4,  # Argos PS3 compatible
+        6,  # PS4 Dualshock Wireless
+        6,  # 8BitDo Pro 2
+        6,  # 8BitDo Pro 2 (X mode)
+        4,  # 8BitDo Pro 2 (S mode)
+    )
+    
+    BTNS = (
+        19, # PS3 Dualshock
+        13, # Rock Candy USB Dongle
+        15, # Pi Hut USB Dongle
+        12, # Argos PS3 compatible
+        13, # PS4 Dualshock Wireless
+        10, # 8BitDo Pro 2
+        11, # 8BitDo Pro 2 (X mode)
+        16, # 8BitDo Pro 2 (S mode)
+    )
+
+    HATS = (
+        0, # PS3 Dualshock
+        1, # Rock Candy USB Dongle
+        1, # Pi Hut USB Dongle
+        1, # Argos PS3 compatible
+        1, # PS4 Dualshock Wireless
+        1, # 8BitDo Pro 2
+        1, # 8BitDo Pro 2 (X mode)
+        1, # 8BitDo Pro 2 (S mode)
+    )
+    
+    '''
+        , # PS3 Dualshock
+        , # Rock Candy USB Dongle
+        , # Pi Hut USB Dongle
+        , # Argos PS3 compatible
+        , # PS4 Dualshock Wireless
+        , # 8BitDo Pro 2
+        , # 8BitDo Pro 2 (X mode)
+        , # 8BitDo Pro 2 (S mode)
+    )
+
+    '''
+
     CONTROLLER_DISPLAY_NAMES = ("Sony PS3 Dualshock 6-axis Controller",
                                 "Rock Candy Wireless Gamepad for PS3",
                                 "ThePiHut Wiresless USB Game Controller",
                                 "Argos PS3 Compatible Gamepad",
                                 "Sony PS4 Wireless Controller",
-                                "8BitDo Pro 2")
+                                "8BitDo Pro 2",
+                                "XBox One S",
+                                "8BitDo Pro 2 (S Mode)")
     
     ## Define indices for each control for the different supported controllers
     
     # Axes
-    leftTriggerIdx = (12,-1,4,-1,2,2)
-    rightTriggerIdx = (13,-1,5,-1,5,5)
-    leftStickLRIdx = (0,0,0,0,0,0)
-    leftStickUDIdx = (1,1,1,1,1,1)
-    rightStickLRIdx = (2,2,2,2,3,3)
-    rightStickUDIdx = (3,3,3,3,4,4)
+    leftTriggerIdx = (
+        12, # PS3 Dualshock
+        -1, # Rock Candy USB Dongle
+        4,  # Pi Hut USB Dongle
+        -1, # Argos PS3 compatible
+        2,  # PS4 Dualshock Wireless
+        2,  # 8BitDo Pro 2
+        2,  # 8BitDo Pro 2 (X mode)
+        -1, # 8BitDo Pro 2 (S mode)
+    )
+    
+    rightTriggerIdx = (
+        13, # PS3 Dualshock
+        -1, # Rock Candy USB Dongle
+        5,  # Pi Hut USB Dongle
+        -1, # Argos PS3 compatible
+        5,  # PS4 Dualshock Wireless
+        5,  # 8BitDo Pro 2
+        5,  # 8BitDo Pro 2 (X mode)
+        -1, # 8BitDo Pro 2 (S mode)
+    )
+    
+    leftStickLRIdx = (
+        0, # PS3 Dualshock
+        0, # Rock Candy USB Dongle
+        0, # Pi Hut USB Dongle
+        0, # Argos PS3 compatible
+        0, # PS4 Dualshock Wireless
+        0, # 8BitDo Pro 2
+        0, # 8BitDo Pro 2 (X mode)
+        0, # 8BitDo Pro 2 (S mode)
+    )
+    
+    leftStickUDIdx = (
+        1, # PS3 Dualshock
+        1, # Rock Candy USB Dongle
+        1, # Pi Hut USB Dongle
+        1, # Argos PS3 compatible
+        1, # PS4 Dualshock Wireless
+        1, # 8BitDo Pro 2
+        1, # 8BitDo Pro 2 (X mode)
+        1, # 8BitDo Pro 2 (S mode)
+    )
+    
+    rightStickLRIdx = (
+        2, # PS3 Dualshock
+        2, # Rock Candy USB Dongle
+        2, # Pi Hut USB Dongle
+        2, # Argos PS3 compatible
+        3, # PS4 Dualshock Wireless
+        3, # 8BitDo Pro 2
+        3, # 8BitDo Pro 2 (X mode)
+        2, # 8BitDo Pro 2 (S mode)
+    )
+    
+    rightStickUDIdx = (
+        3, # PS3 Dualshock
+        3, # Rock Candy USB Dongle
+        3, # Pi Hut USB Dongle
+        3, # Argos PS3 compatible
+        4, # PS4 Dualshock Wireless
+        4, # 8BitDo Pro 2
+        4, # 8BitDo Pro 2 (X mode)
+        3, # 8BitDo Pro 2 (S mode)
+    )
     
     # Buttons
-    leftBtn1Idx = (10,4,6,4,4,4)
-    rightBtn1Idx = (11,5,7,5,5,5)
-    leftBtn2Idx = (8,6,8,6,6,-1)
-    rightBtn2Idx = (9,7,9,7,7,-1)
-    leftStickPressIdx = (1,10,13,10,11,8)
-    rightStickPressIdx = (2,11,14,11,12,9)
-    selectBtnIdx = (0,8,10,8,9,6)
-    homeBtnIdx = (16,12,12,-1,10,-1)
-    startBtnIdx = (3,9,11,9,8,7)
-    triangleBtnIdx = (12,3,4,0,2,3)
-    squareBtnIdx = (15,0,3,3,3,2)
-    circleBtnIdx = (13,2,1,1,1,1)
-    crossXBtnIdx = (14,1,0,2,0,0)
+    leftBtn1Idx = (
+        10, # PS3 Dualshock
+         4, # Rock Candy USB Dongle
+         6, # Pi Hut USB Dongle
+         4, # Argos PS3 compatible
+         4, # PS4 Dualshock Wireless
+         4, # 8BitDo Pro 2
+         4, # 8BitDo Pro 2 (X mode)
+         4, # 8BitDo Pro 2 (S mode)
+    )
+    
+    rightBtn1Idx = (
+        11, # PS3 Dualshock
+         5, # Rock Candy USB Dongle
+         7, # Pi Hut USB Dongle
+         5, # Argos PS3 compatible
+         5, # PS4 Dualshock Wireless
+         5, # 8BitDo Pro 2
+         5, # 8BitDo Pro 2 (X mode)
+         5, # 8BitDo Pro 2 (S mode)
+    )
+    
+    leftBtn2Idx = (
+         8, # PS3 Dualshock
+         6, # Rock Candy USB Dongle
+         8, # Pi Hut USB Dongle
+         6, # Argos PS3 compatible
+         6, # PS4 Dualshock Wireless
+        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (X mode)
+         6, # 8BitDo Pro 2 (S mode)
+    )
+    
+    rightBtn2Idx = (
+         9, # PS3 Dualshock
+         7, # Rock Candy USB Dongle
+         9, # Pi Hut USB Dongle
+         7, # Argos PS3 compatible
+         7, # PS4 Dualshock Wireless
+        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (X mode)
+         7, # 8BitDo Pro 2 (S mode)
+    )
+    
+    leftStickPressIdx = (
+         1, # PS3 Dualshock
+        10, # Rock Candy USB Dongle
+        13, # Pi Hut USB Dongle
+        10, # Argos PS3 compatible
+        11, # PS4 Dualshock Wireless
+         8, # 8BitDo Pro 2
+         8, # 8BitDo Pro 2 (X mode)
+        10, # 8BitDo Pro 2 (S mode)
+    )
+    
+    rightStickPressIdx = (
+         2, # PS3 Dualshock
+        11, # Rock Candy USB Dongle
+        14, # Pi Hut USB Dongle
+        11, # Argos PS3 compatible
+        12, # PS4 Dualshock Wireless
+         9, # 8BitDo Pro 2
+         9, # 8BitDo Pro 2 (X mode)
+        11, # 8BitDo Pro 2 (S mode)
+    )
+    
+    triangleXBtnIdx = (
+        12, # PS3 Dualshock
+         3, # Rock Candy USB Dongle
+         4, # Pi Hut USB Dongle
+         0, # Argos PS3 compatible
+         2, # PS4 Dualshock Wireless
+         3, # 8BitDo Pro 2
+         3, # 8BitDo Pro 2 (X mode)
+         3, # 8BitDo Pro 2 (S mode)
+    )
+    
+    squareYBtnIdx = (
+        15, # PS3 Dualshock
+         0, # Rock Candy USB Dongle
+         3, # Pi Hut USB Dongle
+         3, # Argos PS3 compatible
+         3, # PS4 Dualshock Wireless
+         2, # 8BitDo Pro 2
+         2, # 8BitDo Pro 2 (X mode)
+         2, # 8BitDo Pro 2 (S mode)
+    )
+    
+    circleABtnIdx = (
+        13, # PS3 Dualshock
+         2, # Rock Candy USB Dongle
+         1, # Pi Hut USB Dongle
+         1, # Argos PS3 compatible
+         1, # PS4 Dualshock Wireless
+         1, # 8BitDo Pro 2
+         1, # 8BitDo Pro 2 (X mode)
+         1, # 8BitDo Pro 2 (S mode)
+    )
+    
+    crossBBtnIdx = (
+        14, # PS3 Dualshock
+         1, # Rock Candy USB Dongle
+         0, # Pi Hut USB Dongle
+         2, # Argos PS3 compatible
+         0, # PS4 Dualshock Wireless
+         0, # 8BitDo Pro 2
+         0, # 8BitDo Pro 2 (X mode)
+         0, # 8BitDo Pro 2 (S mode)
+    )
+    
+    selectBtnIdx = (
+         0, # PS3 Dualshock
+         8, # Rock Candy USB Dongle
+        10, # Pi Hut USB Dongle
+         8, # Argos PS3 compatible
+         9, # PS4 Dualshock Wireless
+         6, # 8BitDo Pro 2
+         6, # 8BitDo Pro 2 (X mode)
+         8, # 8BitDo Pro 2 (S mode)
+    )
+    
+    homeBtnIdx = (
+        16, # PS3 Dualshock
+        12, # Rock Candy USB Dongle
+        12, # Pi Hut USB Dongle
+        -1, # Argos PS3 compatible
+        10, # PS4 Dualshock Wireless
+        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (X mode)
+        -1, # 8BitDo Pro 2 (S mode)
+    )
+    
+    startBtnIdx = (
+         3, # PS3 Dualshock
+         9, # Rock Candy USB Dongle
+        11, # Pi Hut USB Dongle
+         9, # Argos PS3 compatible
+         8, # PS4 Dualshock Wireless
+         7, # 8BitDo Pro 2
+         7, # 8BitDo Pro 2 (X mode)
+         9, # 8BitDo Pro 2 (S mode)
+    )
+    
     
     # Hats which manifest as separate buttons
-    hatLeftIdx = (7,-1,-1,-1,-1,-1)
-    hatRightIdx = (5,-1,-1,-1,-1,-1)
-    hatUpIdx = (4,-1,-1,-1,-1,-1)
-    hatDownIdx = (6,-1,-1,-1,-1,-1)
+    hatLeftIdx = (
+         7, # PS3 Dualshock
+        -1, # Rock Candy USB Dongle
+        -1, # Pi Hut USB Dongle
+        -1, # Argos PS3 compatible
+        -1, # PS4 Dualshock Wireless
+        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (X mode)
+        -1, # 8BitDo Pro 2 (S mode)
+    )
+    
+    hatRightIdx = (
+         5, # PS3 Dualshock
+        -1, # Rock Candy USB Dongle
+        -1, # Pi Hut USB Dongle
+        -1, # Argos PS3 compatible
+        -1, # PS4 Dualshock Wireless
+        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (X mode)
+        -1, # 8BitDo Pro 2 (S mode)
+    )
+    
+    hatUpIdx = (
+         4, # PS3 Dualshock
+        -1, # Rock Candy USB Dongle
+        -1, # Pi Hut USB Dongle
+        -1, # Argos PS3 compatible
+        -1, # PS4 Dualshock Wireless
+        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (X mode)
+        -1, # 8BitDo Pro 2 (S mode)
+    )
+    
+    hatDownIdx = (
+         6, # PS3 Dualshock
+        -1, # Rock Candy USB Dongle
+        -1, # Pi Hut USB Dongle
+        -1, # Argos PS3 compatible
+        -1, # PS4 Dualshock Wireless
+        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (X mode)
+        -1, # 8BitDo Pro 2 (S mode)
+    )
+    
     
     # True hats
-    hatIdx = (-1,0,0,0,0,0)
+    hatIdx = (
+        -1, # PS3 Dualshock
+         0, # Rock Candy USB Dongle
+         0, # Pi Hut USB Dongle
+         0, # Argos PS3 compatible
+         0, # PS4 Dualshock Wireless
+         0, # 8BitDo Pro 2
+         0, # 8BitDo Pro 2 (X mode)
+         0, # 8BitDo Pro 2 (S mode)
+    )
+    
 
     #Properties holding program status or controlling behaviour
     initialised = False
@@ -523,16 +809,16 @@ class RobotController:
 
         
         self.triangleBtnState = self.processButton(
-            self.triangleBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            self.triangleXBtnIdx[self.DETECTED_JOYSTICK_IDX],
             "Triangle Button", self.triangleBtnState, self.triangleBtnChanged)
         self.squareBtnState = self.processButton(
-            self.squareBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            self.squareYBtnIdx[self.DETECTED_JOYSTICK_IDX],
             "Square Button", self.squareBtnState, self.squareBtnChanged)
         self.circleBtnState = self.processButton(
-            self.circleBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            self.circleABtnIdx[self.DETECTED_JOYSTICK_IDX],
             "Circle Button", self.circleBtnState, self.circleBtnChanged)
         self.crossXBtnState = self.processButton(
-            self.crossXBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            self.crossBBtnIdx[self.DETECTED_JOYSTICK_IDX],
             "X-Cross Button", self.crossXBtnState, self.crossXBtnChanged)
 
         if self.displayControllerOutput == True:
