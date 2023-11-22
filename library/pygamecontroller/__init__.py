@@ -95,6 +95,8 @@ class RobotController:
             
             startBtnChanged: A callback function for the Start button (see leftBtn1Changed)
             
+            starBtnChanged: A callback function for the Star button (see leftBtn1Changed)
+            
             triangleBtnChanged: A callback function for the triangle symbol button (see leftBtn1Changed)
             
             squareBtnChanged: A callback function for the square symbol button (see leftBtn1Changed)
@@ -117,7 +119,8 @@ class RobotController:
                            "Wireless Controller",
                            "8BitDo Pro 2",
                            "Xbox One S",
-                           "Pro Controller")
+                           "Pro Controller",
+                           "Logitech Gamepad F710")
     DETECTED_JOYSTICK_IDX = -1
     
     #Define specifications of each supported controller
@@ -127,9 +130,10 @@ class RobotController:
         6,  # Pi Hut USB Dongle
         4,  # Argos PS3 compatible
         6,  # PS4 Dualshock Wireless
-        6,  # 8BitDo Pro 2
+        6,  # 8BitDo Pro 2 (D mode)
         6,  # 8BitDo Pro 2 (X mode)
         4,  # 8BitDo Pro 2 (S mode)
+        6,  # Logitech Gamepad F710
     )
     
     BTNS = (
@@ -138,9 +142,10 @@ class RobotController:
         15, # Pi Hut USB Dongle
         12, # Argos PS3 compatible
         13, # PS4 Dualshock Wireless
-        10, # 8BitDo Pro 2
+        16, # 8BitDo Pro 2 (D mode)
         11, # 8BitDo Pro 2 (X mode)
         16, # 8BitDo Pro 2 (S mode)
+        11, # Logitech Gamepad F710
     )
 
     HATS = (
@@ -149,9 +154,11 @@ class RobotController:
         1, # Pi Hut USB Dongle
         1, # Argos PS3 compatible
         1, # PS4 Dualshock Wireless
-        1, # 8BitDo Pro 2
+        1, # 8BitDo Pro 2 (D mode)
         1, # 8BitDo Pro 2 (X mode)
         1, # 8BitDo Pro 2 (S mode)
+        1, # Logitech Gamepad F710
+
     )
     
     '''
@@ -160,7 +167,7 @@ class RobotController:
         , # Pi Hut USB Dongle
         , # Argos PS3 compatible
         , # PS4 Dualshock Wireless
-        , # 8BitDo Pro 2
+        , # 8BitDo Pro 2 (D mode)
         , # 8BitDo Pro 2 (X mode)
         , # 8BitDo Pro 2 (S mode)
     )
@@ -172,9 +179,10 @@ class RobotController:
                                 "ThePiHut Wiresless USB Game Controller",
                                 "Argos PS3 Compatible Gamepad",
                                 "Sony PS4 Wireless Controller",
-                                "8BitDo Pro 2",
+                                "8BitDo Pro 2 (S Mode)",
                                 "XBox One S",
-                                "8BitDo Pro 2 (S Mode)")
+                                "8BitDo Pro 2 (S Mode)",
+                                "Logitech Gamepad F710")
     
     ## Define indices for each control for the different supported controllers
     
@@ -185,9 +193,10 @@ class RobotController:
         4,  # Pi Hut USB Dongle
         -1, # Argos PS3 compatible
         2,  # PS4 Dualshock Wireless
-        2,  # 8BitDo Pro 2
+        5,  # 8BitDo Pro 2 (D mode)
         2,  # 8BitDo Pro 2 (X mode)
         -1, # 8BitDo Pro 2 (S mode)
+        2, # Logitech Gamepad F710
     )
     
     rightTriggerIdx = (
@@ -196,9 +205,10 @@ class RobotController:
         5,  # Pi Hut USB Dongle
         -1, # Argos PS3 compatible
         5,  # PS4 Dualshock Wireless
-        5,  # 8BitDo Pro 2
+        4,  # 8BitDo Pro 2 (D mode)
         5,  # 8BitDo Pro 2 (X mode)
         -1, # 8BitDo Pro 2 (S mode)
+        5, # Logitech Gamepad F710
     )
     
     leftStickLRIdx = (
@@ -207,9 +217,10 @@ class RobotController:
         0, # Pi Hut USB Dongle
         0, # Argos PS3 compatible
         0, # PS4 Dualshock Wireless
-        0, # 8BitDo Pro 2
+        0, # 8BitDo Pro 2 (D mode)
         0, # 8BitDo Pro 2 (X mode)
         0, # 8BitDo Pro 2 (S mode)
+        0, # Logitech Gamepad F710
     )
     
     leftStickUDIdx = (
@@ -218,9 +229,10 @@ class RobotController:
         1, # Pi Hut USB Dongle
         1, # Argos PS3 compatible
         1, # PS4 Dualshock Wireless
-        1, # 8BitDo Pro 2
+        1, # 8BitDo Pro 2 (D mode)
         1, # 8BitDo Pro 2 (X mode)
         1, # 8BitDo Pro 2 (S mode)
+        1, # Logitech Gamepad F710
     )
     
     rightStickLRIdx = (
@@ -229,9 +241,10 @@ class RobotController:
         2, # Pi Hut USB Dongle
         2, # Argos PS3 compatible
         3, # PS4 Dualshock Wireless
-        3, # 8BitDo Pro 2
+        2, # 8BitDo Pro 2 (D mode)
         3, # 8BitDo Pro 2 (X mode)
         2, # 8BitDo Pro 2 (S mode)
+        3, # Logitech Gamepad F710
     )
     
     rightStickUDIdx = (
@@ -240,9 +253,10 @@ class RobotController:
         3, # Pi Hut USB Dongle
         3, # Argos PS3 compatible
         4, # PS4 Dualshock Wireless
-        4, # 8BitDo Pro 2
+        3, # 8BitDo Pro 2 (D mode)
         4, # 8BitDo Pro 2 (X mode)
         3, # 8BitDo Pro 2 (S mode)
+        4, # Logitech Gamepad F710
     )
     
     # Buttons
@@ -252,9 +266,10 @@ class RobotController:
          6, # Pi Hut USB Dongle
          4, # Argos PS3 compatible
          4, # PS4 Dualshock Wireless
-         4, # 8BitDo Pro 2
+         6, # 8BitDo Pro 2 (D mode)
          4, # 8BitDo Pro 2 (X mode)
          4, # 8BitDo Pro 2 (S mode)
+         4, # Logitech Gamepad F710
     )
     
     rightBtn1Idx = (
@@ -263,9 +278,10 @@ class RobotController:
          7, # Pi Hut USB Dongle
          5, # Argos PS3 compatible
          5, # PS4 Dualshock Wireless
-         5, # 8BitDo Pro 2
+         7, # 8BitDo Pro 2 (D mode)
          5, # 8BitDo Pro 2 (X mode)
          5, # 8BitDo Pro 2 (S mode)
+         5, # Logitech Gamepad F710
     )
     
     leftBtn2Idx = (
@@ -274,9 +290,10 @@ class RobotController:
          8, # Pi Hut USB Dongle
          6, # Argos PS3 compatible
          6, # PS4 Dualshock Wireless
-        -1, # 8BitDo Pro 2
+         8, # 8BitDo Pro 2 (D mode)
         -1, # 8BitDo Pro 2 (X mode)
          6, # 8BitDo Pro 2 (S mode)
+        -1, # Logitech Gamepad F710
     )
     
     rightBtn2Idx = (
@@ -285,9 +302,10 @@ class RobotController:
          9, # Pi Hut USB Dongle
          7, # Argos PS3 compatible
          7, # PS4 Dualshock Wireless
-        -1, # 8BitDo Pro 2
+         9, # 8BitDo Pro 2 (D mode)
         -1, # 8BitDo Pro 2 (X mode)
          7, # 8BitDo Pro 2 (S mode)
+        -1, # Logitech Gamepad F710
     )
     
     leftStickPressIdx = (
@@ -296,9 +314,10 @@ class RobotController:
         13, # Pi Hut USB Dongle
         10, # Argos PS3 compatible
         11, # PS4 Dualshock Wireless
-         8, # 8BitDo Pro 2
+        13, # 8BitDo Pro 2 (D mode)
          8, # 8BitDo Pro 2 (X mode)
         10, # 8BitDo Pro 2 (S mode)
+         9, # Logitech Gamepad F710
     )
     
     rightStickPressIdx = (
@@ -307,9 +326,10 @@ class RobotController:
         14, # Pi Hut USB Dongle
         11, # Argos PS3 compatible
         12, # PS4 Dualshock Wireless
-         9, # 8BitDo Pro 2
+        14, # 8BitDo Pro 2 (D mode)
          9, # 8BitDo Pro 2 (X mode)
         11, # 8BitDo Pro 2 (S mode)
+        10, # Logitech Gamepad F710
     )
     
     triangleXBtnIdx = (
@@ -318,9 +338,10 @@ class RobotController:
          4, # Pi Hut USB Dongle
          0, # Argos PS3 compatible
          2, # PS4 Dualshock Wireless
-         3, # 8BitDo Pro 2
+         3, # 8BitDo Pro 2 (D mode)
          3, # 8BitDo Pro 2 (X mode)
          3, # 8BitDo Pro 2 (S mode)
+         3, # Logitech Gamepad F710  (labelled Y)
     )
     
     squareYBtnIdx = (
@@ -329,9 +350,10 @@ class RobotController:
          3, # Pi Hut USB Dongle
          3, # Argos PS3 compatible
          3, # PS4 Dualshock Wireless
-         2, # 8BitDo Pro 2
+         4, # 8BitDo Pro 2 (D mode)
          2, # 8BitDo Pro 2 (X mode)
          2, # 8BitDo Pro 2 (S mode)
+         2, # Logitech Gamepad F710  (labelled X)
     )
     
     circleABtnIdx = (
@@ -340,9 +362,10 @@ class RobotController:
          1, # Pi Hut USB Dongle
          1, # Argos PS3 compatible
          1, # PS4 Dualshock Wireless
-         1, # 8BitDo Pro 2
+         0, # 8BitDo Pro 2 (D mode)
          1, # 8BitDo Pro 2 (X mode)
          1, # 8BitDo Pro 2 (S mode)
+         1, # Logitech Gamepad F710  (labelled B)
     )
     
     crossBBtnIdx = (
@@ -351,9 +374,10 @@ class RobotController:
          0, # Pi Hut USB Dongle
          2, # Argos PS3 compatible
          0, # PS4 Dualshock Wireless
-         0, # 8BitDo Pro 2
+         1, # 8BitDo Pro 2 (D mode)
          0, # 8BitDo Pro 2 (X mode)
          0, # 8BitDo Pro 2 (S mode)
+         0, # Logitech Gamepad F710  (labelled A)
     )
     
     selectBtnIdx = (
@@ -362,9 +386,10 @@ class RobotController:
         10, # Pi Hut USB Dongle
          8, # Argos PS3 compatible
          9, # PS4 Dualshock Wireless
-         6, # 8BitDo Pro 2
+        10, # 8BitDo Pro 2 (D mode)
          6, # 8BitDo Pro 2 (X mode)
          8, # 8BitDo Pro 2 (S mode)
+         6, # Logitech Gamepad F710 (labelled Back)
     )
     
     homeBtnIdx = (
@@ -373,9 +398,10 @@ class RobotController:
         12, # Pi Hut USB Dongle
         -1, # Argos PS3 compatible
         10, # PS4 Dualshock Wireless
-        -1, # 8BitDo Pro 2
-        -1, # 8BitDo Pro 2 (X mode)
-        -1, # 8BitDo Pro 2 (S mode)
+        12, # 8BitDo Pro 2 (D mode)
+        10, # 8BitDo Pro 2 (X mode)
+        12, # 8BitDo Pro 2 (S mode)
+         8, # Logitech Gamepad F710
     )
     
     startBtnIdx = (
@@ -384,11 +410,24 @@ class RobotController:
         11, # Pi Hut USB Dongle
          9, # Argos PS3 compatible
          8, # PS4 Dualshock Wireless
-         7, # 8BitDo Pro 2
+        11, # 8BitDo Pro 2 (D mode)
          7, # 8BitDo Pro 2 (X mode)
          9, # 8BitDo Pro 2 (S mode)
+         7, # Logitech Gamepad F710
     )
     
+    starBtnIdx = (
+        -1, # PS3 Dualshock
+        -1, # Rock Candy USB Dongle
+        -1, # Pi Hut USB Dongle
+        -1, # Argos PS3 compatible
+        -1, # PS4 Dualshock Wireless
+        -1, # 8BitDo Pro 2 (D mode)
+        -1, # 8BitDo Pro 2 (X mode)
+        13, # 8BitDo Pro 2 (S mode)
+        -1, # Logitech Gamepad F710
+    )
+
     
     # Hats which manifest as separate buttons
     hatLeftIdx = (
@@ -397,7 +436,7 @@ class RobotController:
         -1, # Pi Hut USB Dongle
         -1, # Argos PS3 compatible
         -1, # PS4 Dualshock Wireless
-        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (D mode)
         -1, # 8BitDo Pro 2 (X mode)
         -1, # 8BitDo Pro 2 (S mode)
     )
@@ -408,9 +447,10 @@ class RobotController:
         -1, # Pi Hut USB Dongle
         -1, # Argos PS3 compatible
         -1, # PS4 Dualshock Wireless
-        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (D mode)
         -1, # 8BitDo Pro 2 (X mode)
         -1, # 8BitDo Pro 2 (S mode)
+        -1, # Logitech Gamepad F710
     )
     
     hatUpIdx = (
@@ -419,9 +459,10 @@ class RobotController:
         -1, # Pi Hut USB Dongle
         -1, # Argos PS3 compatible
         -1, # PS4 Dualshock Wireless
-        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (D mode)
         -1, # 8BitDo Pro 2 (X mode)
         -1, # 8BitDo Pro 2 (S mode)
+        -1, # Logitech Gamepad F710
     )
     
     hatDownIdx = (
@@ -430,9 +471,10 @@ class RobotController:
         -1, # Pi Hut USB Dongle
         -1, # Argos PS3 compatible
         -1, # PS4 Dualshock Wireless
-        -1, # 8BitDo Pro 2
+        -1, # 8BitDo Pro 2 (D mode)
         -1, # 8BitDo Pro 2 (X mode)
         -1, # 8BitDo Pro 2 (S mode)
+        -1, # Logitech Gamepad F710
     )
     
     
@@ -443,9 +485,10 @@ class RobotController:
          0, # Pi Hut USB Dongle
          0, # Argos PS3 compatible
          0, # PS4 Dualshock Wireless
-         0, # 8BitDo Pro 2
+         0, # 8BitDo Pro 2 (D mode)
          0, # 8BitDo Pro 2 (X mode)
          0, # 8BitDo Pro 2 (S mode)
+        -1, # Logitech Gamepad F710
     )
     
 
@@ -481,6 +524,7 @@ class RobotController:
     selectBtnState = 0
     homeBtnState = 0
     startBtnState = 0
+    starBtnState = 0
     triangleBtnState = 0
     squareBtnState = 0
     circleBtnState = 0
@@ -492,7 +536,7 @@ class RobotController:
                  leftBtn2Changed = None, rightBtn2Changed = None,
                  hatChanged = None,
                  leftStickPressChanged = None, rightStickPressChanged = None,
-                 selectBtnChanged = None, homeBtnChanged = None, startBtnChanged = None, triangleBtnChanged = None,
+                 selectBtnChanged = None, homeBtnChanged = None, startBtnChanged = None, starBtnChanged = None, triangleBtnChanged = None,
                  squareBtnChanged = None, circleBtnChanged = None, crossXBtnChanged = None,
                  mouseDown = None, mouseUp = None):
         
@@ -512,6 +556,7 @@ class RobotController:
         self.selectBtnChanged = selectBtnChanged
         self.homeBtnChanged = homeBtnChanged
         self.startBtnChanged = startBtnChanged
+        self.starBtnChanged = starBtnChanged
         self.triangleBtnChanged = triangleBtnChanged
         self.squareBtnChanged = squareBtnChanged
         self.circleBtnChanged = circleBtnChanged
@@ -806,6 +851,9 @@ class RobotController:
         self.startBtnState = self.processButton(
             self.startBtnIdx[self.DETECTED_JOYSTICK_IDX],
             "Start Button", self.startBtnState, self.startBtnChanged)
+        self.starBtnState = self.processButton(
+            self.starBtnIdx[self.DETECTED_JOYSTICK_IDX],
+            "Star Button", self.starBtnState, self.starBtnChanged)
 
         
         self.triangleBtnState = self.processButton(
